@@ -13,16 +13,16 @@ namespace Assembee.Game.Entities {
         private static Root root = new Root();
 
         private static Panel buildPanel = new Panel(root, Vector2.Zero, new Vector2(100, 100), Element.Orientation.LowerLeft);
-        private static Text buildText = new Text(buildPanel, "Building:", Vector2.Zero, 1.0f, Element.Orientation.Center);
+        private static Text buildText = new Text(buildPanel, "Building:", Vector2.Zero, 0.8f, Element.Orientation.Center);
 
         private static Panel tilePanel = new Panel(root, new Vector2(0, 0), new Vector2(290, 130), Element.Orientation.UpperRight);
-        private static Text tileText = new Text(tilePanel, "Tile:", new Vector2(0, 0), 1.0f, Element.Orientation.Center);
+        private static Text tileText = new Text(tilePanel, "Tile:", new Vector2(0, 0), 0.8f, Element.Orientation.Center);
 
         private static Panel beePanel = new Panel(root, new Vector2(0, 0), new Vector2(230, 165), Element.Orientation.UpperLeft);
-        private static Text beeText = new Text(beePanel, "Bee:", Vector2.Zero, 1.0f, Element.Orientation.Center);
+        private static Text beeText = new Text(beePanel, "Bee:", Vector2.Zero, 0.8f, Element.Orientation.Center);
 
         public static void DrawHud(SpriteBatch spriteBatch, World world, Game1.Building building) {
-            
+
             root.updateSize();
 
             if (building != Game1.Building.None) {
@@ -44,35 +44,35 @@ namespace Assembee.Game.Entities {
                         break;
                 }
                 buildText.SetString(buildingString);
-                buildPanel.FitToElement(buildText, 20.0f);
-
-                buildPanel.Draw(spriteBatch);
-                buildText.Draw(spriteBatch);
+                buildPanel.FitToChildren(20.0f);
+                buildPanel.active = true;
+            } else {
+                buildPanel.active = false;
             }
 
             if (!(world.selectedTile is null)) {
                 string tileString = world.selectedTile.GetInfoString();
                 tileText.SetString(tileString);
-                tilePanel.FitToElement(tileText, 20.0f);
-
-                tilePanel.Draw(spriteBatch);
-                tileText.Draw(spriteBatch);
-
+                tilePanel.FitToChildren(20.0f);
+                tilePanel.active = true;
+            } else {
+                tilePanel.active = false;
             }
+
             if (world.selectedBee != null) {
-                beePanel.Draw(spriteBatch);
                 string beeString = "Bee:" +
                     "\nNectar: " + ((int)world.selectedBee.nectarAmt).ToString() + " / " + Bee.NECTAR_LIMIT.ToString() +
                     "\nHoney: " + ((int)world.selectedBee.honeyAmt).ToString() + " / " + Bee.HONEY_LIMIT.ToString() +
                     "\nWax: " + ((int)world.selectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString();
 
                 beeText.SetString(beeString);
-                beePanel.FitToElement(beeText, 20.0f);
-
-                beePanel.Draw(spriteBatch);
-                beeText.Draw(spriteBatch);
-
+                beePanel.FitToChildren(20.0f);
+                beePanel.active = true;
+            } else {
+                beePanel.active = false;
             }
+
+            root.DrawAll(spriteBatch);
         }
     }
 }

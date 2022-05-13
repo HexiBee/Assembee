@@ -20,7 +20,7 @@ namespace Assembee.Game.UI {
             this.scale = scale;
         }
 
-        public override void Draw(SpriteBatch spriteBatch) {
+        protected override void Draw(SpriteBatch spriteBatch) {
             spriteBatch.DrawString(Game1.font1, textString, getDrawPosition(), Color.DarkOrange, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 1.0f);
             base.Draw(spriteBatch);
         }

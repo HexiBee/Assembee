@@ -19,20 +19,28 @@ namespace Assembee.Game.UI {
             LowerRight
         }
 
+        public bool active = true;
+        public Vector2 position;
+        public Vector2 size;
+        public Orientation anchor = Orientation.UpperLeft;
+        public Orientation origin = Orientation.UpperLeft;
+        public Color color = Color.White;
+
         protected Element parent;
-        protected Vector2 position;
-        protected Vector2 size;
-        protected Orientation anchor = Orientation.UpperLeft;
-        protected Orientation origin = Orientation.UpperLeft;
+        protected List<Element> children = new List<Element>();
 
         public Element(Element parent, Vector2 position, Vector2 size) {
             this.parent = parent;
+            if (parent != null)
+                parent.children.Add(this);
             this.position = position;
             this.size = size;
         }
 
         public Element(Element parent, Vector2 position, Vector2 size, Orientation anchor) {
             this.parent = parent;
+            if (parent != null)
+                parent.children.Add(this);
             this.position = position;
             this.size = size;
             this.anchor = anchor;
@@ -41,14 +49,35 @@ namespace Assembee.Game.UI {
 
         public Element(Element parent, Vector2 position, Vector2 size, Orientation anchor, Orientation origin) {
             this.parent = parent;
+            if (parent != null)
+                parent.children.Add(this);
             this.position = position;
             this.size = size;
             this.anchor = anchor;
             this.origin = origin;
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch) {
+        public void FitToElement(Element element, float margin) {
+            size = element.size + Vector2.One * margin;
+        }
 
+        public void FitToChildren(float margin) {
+            Rectangle rect = new Rectangle(0, 0, 1, 1);
+            foreach (Element child in children.ToArray()) {
+                rect = Rectangle.Union(rect, child.getBounds());
+            }
+            size = rect.Size.ToVector2() + Vector2.One * margin * 2;
+        }
+
+        protected virtual void Draw(SpriteBatch spriteBatch) {
+            foreach (Element child in children.ToArray()) {
+                if (child.active)
+                    child.Draw(spriteBatch);
+            }
+        }
+
+        protected virtual Rectangle getBounds() {
+            return new Rectangle(position.ToPoint(), size.ToPoint());
         }
 
         protected virtual Vector2 getDrawPosition() {
@@ -88,10 +117,6 @@ namespace Assembee.Game.UI {
             pos.Y -= y * size.Y;
 
             return pos + position;
-        }
-
-        public void FitToElement(Element element, float margin) {
-            size = element.size + Vector2.One * margin;
         }
 
     }

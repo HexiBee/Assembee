@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,10 @@ namespace Assembee.Game.UI {
 
         protected override Vector2 getDrawPosition() {
             return Vector2.Zero;
+        }
+
+        public void DrawAll(SpriteBatch spriteBatch) {
+            Draw(spriteBatch);
         }
 
         public void updateSize() {
