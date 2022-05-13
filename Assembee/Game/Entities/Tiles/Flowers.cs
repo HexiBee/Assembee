@@ -42,10 +42,8 @@ namespace Assembee.Game.Entities.Tiles {
             //}
         }
 
-        public override void drawInfoUI(SpriteBatch spriteBatch, World world) {
-            Vector2 orig = new Vector2(Game1.ScreenWidth - 250, 0);
-            spriteBatch.DrawString(Game1.font1, "Flowers:", orig + new Vector2(0, 0), Color.Black);
-            spriteBatch.DrawString(Game1.font1, "Nectar: " + nectarAmt.ToString(), orig + new Vector2(0, 40), Color.Black);
+        public override string GetInfoString() {
+            return "Flowers:\nNectar: " + nectarAmt.ToString();
         }
 
     }

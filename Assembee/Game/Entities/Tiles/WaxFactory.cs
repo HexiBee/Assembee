@@ -42,10 +42,8 @@ namespace Assembee.Game.Entities.Tiles {
             }
         }
 
-        public override void drawInfoUI(SpriteBatch spriteBatch, World world) {
-            Vector2 orig = new Vector2(Game1.ScreenWidth - 250, 0);
-            spriteBatch.DrawString(Game1.font1, "Wax Factory:", orig + new Vector2(0, 0), Color.Black);
-            spriteBatch.DrawString(Game1.font1, "Honey: " + honeyProcessed.ToString() + " / " + honeyNeeded.ToString(), orig + new Vector2(0, 40), Color.Black);
+        public override string GetInfoString() {
+            return "Wax Factory:\nHoney " + honeyProcessed.ToString() + " / " + honeyNeeded.ToString();
         }
 
         public override bool BuildingReqs(out int honeyRequired, out int waxRequired) {
@@ -54,8 +52,8 @@ namespace Assembee.Game.Entities.Tiles {
             return true;
         }
 
-        public static void BuildUI(SpriteBatch spriteBatch, World world) {
-            IBuildable.BuildUI(spriteBatch, world, HONEY_NEEDED, WAX_NEEDED, NAME);
+        public static string BuildUI(World world) {
+            return IBuildable.BuildUI(world, HONEY_NEEDED, WAX_NEEDED, NAME);
         }
 
     }

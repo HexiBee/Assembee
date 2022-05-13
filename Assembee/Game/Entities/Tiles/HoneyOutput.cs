@@ -32,12 +32,8 @@ namespace Assembee.Game.Entities.Tiles
             base.Update(gameTime);
         }
 
-        public override void drawInfoUI(SpriteBatch spriteBatch, World world) {
-            Vector2 orig = new Vector2(Game1.ScreenWidth - 250, 0);
-            spriteBatch.DrawString(Game1.font1, "Honey Output:", orig, Color.Black);
-            spriteBatch.DrawString(Game1.font1, "Honey: " + world.hive.honeyAmt.ToString(), orig + new Vector2(0, 40), Color.Black);
-
-            base.drawInfoUI(spriteBatch, world);
+        public override string GetInfoString() {
+            return "Honey Output:\nHoney: " + world.hive.honeyAmt.ToString();
         }
 
     }

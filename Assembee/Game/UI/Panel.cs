@@ -15,6 +15,10 @@ namespace Assembee.Game.UI {
             Game1.TextureRegistry.TryGetValue(DEFAULT_SPRITE, out texture);
         }
 
+        public Panel(Element parent, Vector2 position, Vector2 size, Orientation anchor) : base(parent, position, size, anchor) {
+            Game1.TextureRegistry.TryGetValue(DEFAULT_SPRITE, out texture);
+        }
+
         public override void Draw(SpriteBatch spriteBatch) {
             spriteBatch.Draw(texture, new Rectangle(getDrawPosition().ToPoint(), size.ToPoint()), Color.White);
             base.Draw(spriteBatch);

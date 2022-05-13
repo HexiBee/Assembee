@@ -1,4 +1,5 @@
-﻿using Assembee.Game.UI;
+﻿using Assembee.Game.Entities.Tiles;
+using Assembee.Game.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -10,25 +11,68 @@ namespace Assembee.Game.Entities {
         static Color col = Color.Black;
 
         private static Root root = new Root();
-        private static Panel beePanel = new Panel(root, new Vector2(0, 0), new Vector2(230, 165), Element.Orientation.UpperLeft, Element.Orientation.UpperLeft);
-        private static Panel tilePanel = new Panel(root, new Vector2(0, 0), new Vector2(290, 130), Element.Orientation.UpperRight, Element.Orientation.UpperRight);
 
-        public static void DrawHud(SpriteBatch spriteBatch, World world) {
+        private static Panel buildPanel = new Panel(root, Vector2.Zero, new Vector2(100, 100), Element.Orientation.LowerLeft);
+        private static Text buildText = new Text(buildPanel, "Building:", Vector2.Zero, 1.0f, Element.Orientation.Center);
 
+        private static Panel tilePanel = new Panel(root, new Vector2(0, 0), new Vector2(290, 130), Element.Orientation.UpperRight);
+        private static Text tileText = new Text(tilePanel, "Tile:", new Vector2(0, 0), 1.0f, Element.Orientation.Center);
+
+        private static Panel beePanel = new Panel(root, new Vector2(0, 0), new Vector2(230, 165), Element.Orientation.UpperLeft);
+        private static Text beeText = new Text(beePanel, "Bee:", Vector2.Zero, 1.0f, Element.Orientation.Center);
+
+        public static void DrawHud(SpriteBatch spriteBatch, World world, Game1.Building building) {
+            
             root.updateSize();
 
+            if (building != Game1.Building.None) {
+                string buildingString;
+                switch (building) {
+                    case Game1.Building.HoneyProducer:
+                        buildingString = HoneyFactory.BuildUI(world);
+                        break;
+
+                    case Game1.Building.WaxProducer:
+                        buildingString = WaxFactory.BuildUI(world);
+                        break;
+
+                    case Game1.Building.Apartment:
+                        buildingString = Apartment.BuildUI(world);
+                        break;
+                    default:
+                        buildingString = "";
+                        break;
+                }
+                buildText.SetString(buildingString);
+                buildPanel.FitToElement(buildText, 20.0f);
+
+                buildPanel.Draw(spriteBatch);
+                buildText.Draw(spriteBatch);
+            }
+
             if (!(world.selectedTile is null)) {
+                string tileString = world.selectedTile.GetInfoString();
+                tileText.SetString(tileString);
+                tilePanel.FitToElement(tileText, 20.0f);
+
                 tilePanel.Draw(spriteBatch);
-                world.selectedTile.drawInfoUI(spriteBatch, world);
+                tileText.Draw(spriteBatch);
+
             }
             if (world.selectedBee != null) {
                 beePanel.Draw(spriteBatch);
-                spriteBatch.DrawString(Game1.font1, "Bee:", new Vector2(10, 5), col);
-                spriteBatch.DrawString(Game1.font1, "Nectar: " + ((int)world.selectedBee.nectarAmt).ToString() + " / " + Bee.NECTAR_LIMIT.ToString(), new Vector2(10, 45), col);
-                spriteBatch.DrawString(Game1.font1, "Honey: " + ((int)world.selectedBee.honeyAmt).ToString() + " / " + Bee.HONEY_LIMIT.ToString(), new Vector2(10, 85), col);
-                spriteBatch.DrawString(Game1.font1, "Wax: " + ((int)world.selectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString(), new Vector2(10, 125), col);
-            }
+                string beeString = "Bee:" +
+                    "\nNectar: " + ((int)world.selectedBee.nectarAmt).ToString() + " / " + Bee.NECTAR_LIMIT.ToString() +
+                    "\nHoney: " + ((int)world.selectedBee.honeyAmt).ToString() + " / " + Bee.HONEY_LIMIT.ToString() +
+                    "\nWax: " + ((int)world.selectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString();
 
+                beeText.SetString(beeString);
+                beePanel.FitToElement(beeText, 20.0f);
+
+                beePanel.Draw(spriteBatch);
+                beeText.Draw(spriteBatch);
+
+            }
         }
     }
 }

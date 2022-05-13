@@ -10,11 +10,12 @@ namespace Assembee.Game.Entities.Tiles {
         static int WAX_NEEDED { get; set; }
         static string NAME { get; set; }
 
-        public static void BuildUI(SpriteBatch spriteBatch, World world, int HONEY_NEEDED, int WAX_NEEDED, string NAME) {
-            Vector2 orig = new Vector2(0, Game1.ScreenHeight - 250 + 130);
-            spriteBatch.DrawString(Game1.font1, "Build " + NAME + ":", orig, Color.Black);
-            spriteBatch.DrawString(Game1.font1, "Honey Needed: " + world.hive.honeyAmt.ToString() + " / " + HONEY_NEEDED.ToString(), orig + new Vector2(0, 40), Color.Black);
-            spriteBatch.DrawString(Game1.font1, "Wax Needed: " + world.hive.waxAmt.ToString() + " / " + WAX_NEEDED.ToString(), orig + new Vector2(0, 80), Color.Black);
+        public static string BuildUI(World world, int HONEY_NEEDED, int WAX_NEEDED, string NAME) {
+            string uiString = "";
+            uiString += "Build " + NAME + ":";
+            uiString += "\nHoney Needed: " + world.hive.honeyAmt.ToString() + " / " + HONEY_NEEDED.ToString();
+            uiString += "\nWax Needed: " + world.hive.waxAmt.ToString() + " / " + WAX_NEEDED.ToString();
+            return uiString;
         }
     }
 }

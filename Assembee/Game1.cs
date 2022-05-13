@@ -63,7 +63,7 @@ namespace Assembee {
         Audio audio;
         public static SpriteFont font1;
 
-        enum Building {
+        public enum Building {
             None,
             Apartment,
             HoneyProducer,
@@ -421,25 +421,7 @@ namespace Assembee {
             //UI
             spriteBatch.Begin();
             // Text
-            HUD.DrawHud(spriteBatch, world);
-
-            if (selectedBuilding != Building.None) {
-                switch (selectedBuilding) {
-                    case Building.HoneyProducer:
-                        HoneyFactory.BuildUI(spriteBatch, world);
-                        break;
-
-                    case Building.WaxProducer:
-                        WaxFactory.BuildUI(spriteBatch, world);
-                        break;
-
-                    case Building.Apartment:
-                        Apartment.BuildUI(spriteBatch, world);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            HUD.DrawHud(spriteBatch, world, selectedBuilding);
 
             spriteBatch.End();
 

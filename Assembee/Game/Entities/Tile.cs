@@ -24,8 +24,8 @@ namespace Assembee.Game.Entities {
 
         }
 
-        public virtual void drawInfoUI(SpriteBatch spriteBatch, World world) {
-
+        public virtual string GetInfoString() {
+            return "";
         }
         public virtual bool BuildingReqs(out int honeyRequired, out int waxRequired) {
             honeyRequired = 0;

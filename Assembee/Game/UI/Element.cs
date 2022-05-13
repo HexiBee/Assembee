@@ -31,6 +31,14 @@ namespace Assembee.Game.UI {
             this.size = size;
         }
 
+        public Element(Element parent, Vector2 position, Vector2 size, Orientation anchor) {
+            this.parent = parent;
+            this.position = position;
+            this.size = size;
+            this.anchor = anchor;
+            origin = anchor;
+        }
+
         public Element(Element parent, Vector2 position, Vector2 size, Orientation anchor, Orientation origin) {
             this.parent = parent;
             this.position = position;
@@ -80,6 +88,10 @@ namespace Assembee.Game.UI {
             pos.Y -= y * size.Y;
 
             return pos + position;
+        }
+
+        public void FitToElement(Element element, float margin) {
+            size = element.size + Vector2.One * margin;
         }
 
     }

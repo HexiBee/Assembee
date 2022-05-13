@@ -45,15 +45,12 @@ namespace Assembee.Game.Entities.Tiles {
             }
         }
 
-        public override void drawInfoUI(SpriteBatch spriteBatch, World world) {
-            Vector2 orig = new Vector2(Game1.ScreenWidth - 250, 0);
-            spriteBatch.DrawString(Game1.font1, "Honey Factory:", orig + new Vector2(0, 0), Color.Black);
-            spriteBatch.DrawString(Game1.font1, "Nectar: " + nectarProcessed.ToString() + " / " + nectarNeeded.ToString(), orig + new Vector2(0, 40), Color.Black);
-            //spriteBatch.DrawString(Game1.font1, "Honey: " + beeInside./honeyAmt.ToString() + " / " + honeyLimit.ToString(), orig + new Vector2(0, 80), Color.Black);
+        public override string GetInfoString() {
+            return "Honey Factory:\nNectar: " + nectarProcessed.ToString() + " / " + nectarNeeded.ToString();
         }
 
-        public static void BuildUI(SpriteBatch spriteBatch, World world) {
-            IBuildable.BuildUI(spriteBatch, world, HONEY_NEEDED, WAX_NEEDED, NAME);
+        public static string BuildUI(World world) {
+            return IBuildable.BuildUI(world, HONEY_NEEDED, WAX_NEEDED, NAME);
         }
 
         public override bool BuildingReqs(out int honeyRequired, out int waxRequired) {

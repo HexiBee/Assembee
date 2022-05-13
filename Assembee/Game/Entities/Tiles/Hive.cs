@@ -49,13 +49,8 @@ namespace Assembee.Game.Entities.Tiles {
             }
         }
 
-        public override void drawInfoUI(SpriteBatch spriteBatch, World world) {
-            Vector2 orig = new Vector2(Game1.ScreenWidth - 250, 0);
-            spriteBatch.DrawString(Game1.font1, "Hive:", orig + new Vector2(0, 0), Color.Black);
-            spriteBatch.DrawString(Game1.font1, "Honey: " + honeyAmt.ToString(), orig + new Vector2(0, 40), Color.Black);
-            spriteBatch.DrawString(Game1.font1, "Wax: " + waxAmt.ToString(), orig + new Vector2(0, 80), Color.Black);
-
-            //orig = new Vector2(Game1.);
+        public override string GetInfoString() {
+            return "Hive:\nHoney: " + honeyAmt.ToString() + "\nWax: " + waxAmt.ToString();
         }
 
 
