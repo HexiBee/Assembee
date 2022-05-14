@@ -13,6 +13,8 @@ namespace Assembee.Game {
         public Matrix Scale;
         public float scale = 1f;
         public Vector2 approach = new Vector2(0, 0);
+        public const float SPD_MOVE = 0.1f, SPD_MOVE_MOUSE = 0.7f;
+
         public float spdMove = 0.1f, spdScale = 0.1f;
         
         public Entity target;

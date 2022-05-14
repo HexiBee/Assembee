@@ -61,27 +61,28 @@ namespace Assembee.Game.Entities {
             } else {
                 buildPanel.active = false;
             }
+            if (world != null) {
+                if (!(world.selectedTile is null)) {
+                    string tileString = world.selectedTile.GetInfoString();
+                    tileText.SetString(tileString);
+                    tilePanel.FitToChildren(10.0f);
+                    tilePanel.active = true;
+                } else {
+                    tilePanel.active = false;
+                }
 
-            if (!(world.selectedTile is null)) {
-                string tileString = world.selectedTile.GetInfoString();
-                tileText.SetString(tileString);
-                tilePanel.FitToChildren(10.0f);
-                tilePanel.active = true;
-            } else {
-                tilePanel.active = false;
-            }
+                if (world.selectedBee != null) {
+                    string beeString = "Bee:" +
+                        "\nNectar: " + ((int)world.selectedBee.nectarAmt).ToString() + " / " + Bee.NECTAR_LIMIT.ToString() +
+                        "\nHoney: " + ((int)world.selectedBee.honeyAmt).ToString() + " / " + Bee.HONEY_LIMIT.ToString() +
+                        "\nWax: " + ((int)world.selectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString();
 
-            if (world.selectedBee != null) {
-                string beeString = "Bee:" +
-                    "\nNectar: " + ((int)world.selectedBee.nectarAmt).ToString() + " / " + Bee.NECTAR_LIMIT.ToString() +
-                    "\nHoney: " + ((int)world.selectedBee.honeyAmt).ToString() + " / " + Bee.HONEY_LIMIT.ToString() +
-                    "\nWax: " + ((int)world.selectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString();
-
-                beeText.SetString(beeString);
-                beePanel.FitToChildren(10.0f);
-                beePanel.active = true;
-            } else {
-                beePanel.active = false;
+                    beeText.SetString(beeString);
+                    beePanel.FitToChildren(10.0f);
+                    beePanel.active = true;
+                } else {
+                    beePanel.active = false;
+                }
             }
 
             root.DrawAll(spriteBatch);

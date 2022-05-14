@@ -63,7 +63,9 @@ namespace Assembee.Game {
             }
         }
 
-
+        public void StopMusic() {
+            MediaPlayer.Stop();
+        }
 
 
         void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e) {

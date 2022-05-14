@@ -202,7 +202,10 @@ namespace Assembee {
         // This probably shouldn't be put here...
         public void StartGame(bool freshStart) {
             //world = new World();
-
+            world = new World();
+            cPos = new CameraPos(spr.a_bee_up, new Vector2(0, 0), world);
+            world.Add(cPos);
+            camera = new Camera(cPos);
 
             // RELOCATED NOW
             //cPos = new CameraPos(spr.a_bee_up, new Vector2(0, 0), world);
@@ -292,6 +295,13 @@ namespace Assembee {
                         SaveManager.Save(world);
                     }
 
+                    if (Input.keyPressed(Input.Enter)) {
+                        //SaveManager.Save(world);
+                        gameState = GameState.TitleScreen;
+                        audio.StopMusic();
+                        world = null;
+                        break;
+                    }
 
                     //end debug
 

@@ -23,7 +23,7 @@ namespace Assembee.Game {
         public static List<Btn> numKeys = new List<Btn>() { One, Two, Three };
 
 
-        public static Btn Enter = new Btn(Keys.Enter, Keys.Space);
+        public static Btn Enter = new Btn(Keys.Enter);
 
 
         // DEBUG keys
@@ -239,6 +239,14 @@ namespace Assembee.Game {
             switch (a) {
                 case 0: return currentMouseState.LeftButton == ButtonState.Pressed;
                 case 1: return currentMouseState.RightButton == ButtonState.Pressed;
+            }
+            return false;
+        }
+
+        public static bool MouseReleased(int a) {
+            switch (a) {
+                case 0: return currentMouseState.LeftButton == ButtonState.Released && previousMouseState.LeftButton == ButtonState.Pressed;
+                case 1: return currentMouseState.RightButton == ButtonState.Released && previousMouseState.RightButton == ButtonState.Pressed;
             }
             return false;
         }

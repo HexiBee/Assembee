@@ -9,6 +9,9 @@ namespace Assembee.Game.Entities {
 
         public float moveSpeed = 4.0f;
         public float baseMoveSpeed = 4.0f;
+        public Vector2 mPosStart;
+        public Vector2 mOffset;
+
 
         public CameraPos(Game1.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
 
@@ -18,6 +21,18 @@ namespace Assembee.Game.Entities {
         }
 
         public override void Update(GameTime gameTime) {
+            //if (Input.Click(0)) {
+                
+            //}
+            if (Input.MouseHold(0)) {
+                mOffset = (mPosStart - Input.getMousePos()) * world.camera.scale;
+                position += mOffset;
+                world.camera.spdMove = Camera.SPD_MOVE_MOUSE;
+            } else {
+                world.camera.spdMove = Camera.SPD_MOVE;
+            }
+
+
             if (Input.keyDown(Input.Left)) {
                 position = new Vector2(position.X - moveSpeed, position.Y);//-=moveSpeed;
             }
@@ -31,6 +46,8 @@ namespace Assembee.Game.Entities {
                 position = new Vector2(position.X, position.Y + moveSpeed);
             }
 
+
+            mPosStart = Input.getMousePos();
         }
     }
 }
