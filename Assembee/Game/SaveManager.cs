@@ -49,13 +49,18 @@ namespace Assembee.Game {
 
 
 
-        public static void Load(World world) {
+        public static bool Load(World world) {
+            if (!File.Exists(fileName)) {
+                return false; // failure, start new game
+            }
             var fileContents = File.ReadAllText(fileName);
+            
             SaveData readData = JsonConvert.DeserializeObject<SaveData>(fileContents, settings);
 
             LoadData(readData, world);
 
 
+            return true;
         }
 
         private static void LoadData(SaveData saveData, World world) {

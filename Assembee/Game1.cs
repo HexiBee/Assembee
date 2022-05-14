@@ -271,7 +271,9 @@ namespace Assembee {
 
                     if (Input.keyPressed(Input.LoadGame)) {
                         StartGame(false);
-                        SaveManager.Load(world);
+                        if (!SaveManager.Load(world)) {
+                            FreshStart();
+                        }
                         gameState = GameState.InGame;
 
                     }
