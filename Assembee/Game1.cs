@@ -58,7 +58,7 @@ namespace Assembee {
         //    a_bee_left
         //}
 
-        World world;
+        public static World world;
         CameraPos cPos;
         Audio audio;
         public static SpriteFont font1;
@@ -84,6 +84,13 @@ namespace Assembee {
         float cameraScaleLerp;
         float[] scale = { 1f, -1f };
         int scaleInc = 0;
+
+        public enum GameState {
+            TitleScreen,
+            InGame,
+        }
+        public GameState gameState = GameState.TitleScreen;
+
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -148,32 +155,24 @@ namespace Assembee {
             } catch (Microsoft.Xna.Framework.Audio.NoAudioHardwareException) {
                 audio.noAudio = true;
             }
-            
-            StartGame();
-
-        }
-
-        // This probably shouldn't be put here...
-        public void StartGame() {
             world = new World();
-
             cPos = new CameraPos(spr.a_bee_up, new Vector2(0, 0), world);
             world.Add(cPos);
             camera = new Camera(cPos);
 
+            //StartGame();
 
-            for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
-                    world.AddBackground(new Tile(spr.t_grass_0, new Vector2(x, y), world));
-                }
-            }
+        }
+
+        public void FreshStart() {
             Hive hive = new Hive(spr.t_hive, new Vector2(0, 0), world);
-            world.Add(hive);
-            world.hive = hive;
+            //world.hive = hive;
             Bee bee = new Bee(spr.a_bee_up, new Vector2(0, 0), world);
 
             world.Add(bee);
             hive.beeInside = bee;
+            world.Add(hive);
+
 
             world.Add(new HoneyOutput(spr.t_helipad_honey, new Vector2(0, 1), world));
             world.Add(new WaxOutput(spr.t_helipad_wax, new Vector2(-1, 1), world));
@@ -191,6 +190,27 @@ namespace Assembee {
                         world.Add(new Flowers(amt, spr.t_flowers, new Vector2(x, y), world));
                     }
                 }
+            }
+        }
+        // This probably shouldn't be put here...
+        public void StartGame(bool freshStart) {
+            //world = new World();
+
+
+            // RELOCATED NOW
+            //cPos = new CameraPos(spr.a_bee_up, new Vector2(0, 0), world);
+            //world.Add(cPos);
+            //camera = new Camera(cPos);
+
+
+            for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
+                for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
+                    world.AddBackground(new Tile(spr.t_grass_0, new Vector2(x, y), world));
+                }
+            }
+
+            if (freshStart) {
+                FreshStart();
             }
 
 
@@ -242,127 +262,156 @@ namespace Assembee {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (camera != null)
-                camera.Follow();
+            switch (gameState) {
+                case GameState.TitleScreen:
+                    if (Input.keyPressed(Input.NewGame)) {
+                        StartGame(true);
+                        gameState = GameState.InGame;
+                    }
 
-       
-            // Tile conditions
-            if (Input.Click(0)) {
-                Tile tileClicked = world.GetTile(Input.getMouseHexTile(camera));
-
-                // Deselect a building when left click
-                selectedBuilding = Building.None;
-
-                if (tileClicked != null) {
-                    selector = new Selector(spr.entity_selector, Input.getMouseHexTile(camera), world);
-                    
-
-                    if (world.selectedBee != null) {
-                       
-                        if (world.selectedTile != tileClicked) {
-                            audio.PlaySound(Audio.sfx.bee, 1f, 0f);
-                        }
-                        world.selectedBee.SetTarget(tileClicked);
-                        
-                        world.selectedBee = null;
+                    if (Input.keyPressed(Input.LoadGame)) {
+                        StartGame(false);
+                        SaveManager.Load(world);
+                        gameState = GameState.InGame;
 
                     }
-                    world.selectedTile = tileClicked;
-                    audio.StopSound(Audio.sfx.click);
-                    audio.PlaySound(Audio.sfx.click, 0.6f, -0.41f);
-                } else {
-                    selector = null;
-                    world.selectedBee = null;
-                    world.selectedTile = null;
-                }
-                
-            }
+                    break;
 
-            if (world.selectedTile != null) {
-                world.selectedBee = world.selectedTile.beeInside;
-            }
-
-            if (Input.Click(1) && world.GetTile(Input.getMouseHexTile(camera)) is null) {
-                Tile newTile;
-                switch (selectedBuilding) {
-                    case Building.Apartment:
-                        newTile = new Apartment(spr.t_apartments, Input.getMouseHexTile(camera), world);
-                        break;
-
-                    case Building.HoneyProducer:
-                        newTile = new HoneyFactory(spr.t_honey_producer, Input.getMouseHexTile(camera), world);
-                        break;
-
-                    case Building.WaxProducer:
-                        newTile = new WaxFactory(spr.t_wax_producer, Input.getMouseHexTile(camera), world);
-                        break;
-
-                    default:
-                        newTile = new Tile(spr.t_hex, Input.getMouseHexTile(camera), world);
-                        break;
-                }
-                int honey, wax;
-                if (newTile.BuildingReqs(out honey, out wax)) {
-                    if (world.hive.honeyAmt >= honey && world.hive.waxAmt >= wax) {
-                        world.hive.honeyAmt -= honey;
-                        world.hive.waxAmt -= wax;
-                        world.Add(newTile);
-                        audio.PlaySound(Audio.sfx.place, 1f, 0f);
-                        if (selectedBuilding == Building.Apartment) {
-                            world.Add(new Bee(spr.a_bee_up, Input.getMouseHexTile(camera), world));
-                        }
+                case GameState.InGame:
+                    // debug
+                    if (Input.keyPressed(Input.SaveGame)) {
+                        SaveManager.Save(world);
                     }
-                }
-                
-            }
 
-            
-            if (Input.scrollPressed() != 0) {
-                cameraScaleLerp += 0.2f*Input.scrollPressed();
-            }
 
-            for (int i = 0; i < Input.numKeys.Count; i++) {
-                if (Input.keyPressed(Input.numKeys[i])) {
-                    if (selectedBuilding != (Building)(i + 1)) {
-                        selectedBuilding = (Building)(i + 1);
-                    } else {
+                    //end debug
+
+                    if (camera != null)
+                        camera.Follow();
+
+
+                    // Tile conditions
+                    if (Input.Click(0)) {
+                        Tile tileClicked = world.GetTile(Input.getMouseHexTile(camera));
+
+                        // Deselect a building when left click
                         selectedBuilding = Building.None;
+
+                        if (tileClicked != null) {
+                            selector = new Selector(spr.entity_selector, Input.getMouseHexTile(camera), world);
+
+
+                            if (world.selectedBee != null) {
+
+                                if (world.selectedTile != tileClicked) {
+                                    audio.PlaySound(Audio.sfx.bee, 1f, 0f);
+                                }
+                                world.selectedBee.SetTarget(tileClicked);
+
+                                world.selectedBee = null;
+
+                            }
+                            world.selectedTile = tileClicked;
+                            audio.StopSound(Audio.sfx.click);
+                            audio.PlaySound(Audio.sfx.click, 0.6f, -0.41f);
+                        } else {
+                            selector = null;
+                            world.selectedBee = null;
+                            world.selectedTile = null;
+                        }
+
                     }
-                }
-            }
+
+                    if (world.selectedTile != null) {
+                        world.selectedBee = world.selectedTile.beeInside;
+                    }
+
+                    if (Input.Click(1) && world.GetTile(Input.getMouseHexTile(camera)) is null) {
+                        Tile newTile;
+                        switch (selectedBuilding) {
+                            case Building.Apartment:
+                                newTile = new Apartment(spr.t_apartments, Input.getMouseHexTile(camera), world);
+                                break;
+
+                            case Building.HoneyProducer:
+                                newTile = new HoneyFactory(spr.t_honey_producer, Input.getMouseHexTile(camera), world);
+                                break;
+
+                            case Building.WaxProducer:
+                                newTile = new WaxFactory(spr.t_wax_producer, Input.getMouseHexTile(camera), world);
+                                break;
+
+                            default:
+                                newTile = new Tile(spr.t_hex, Input.getMouseHexTile(camera), world);
+                                break;
+                        }
+                        int honey, wax;
+                        if (newTile.BuildingReqs(out honey, out wax)) {
+                            if (world.hive.honeyAmt >= honey && world.hive.waxAmt >= wax) {
+                                world.hive.honeyAmt -= honey;
+                                world.hive.waxAmt -= wax;
+                                world.Add(newTile);
+                                audio.PlaySound(Audio.sfx.place, 1f, 0f);
+                                if (selectedBuilding == Building.Apartment) {
+                                    world.Add(new Bee(spr.a_bee_up, Input.getMouseHexTile(camera), world));
+                                }
+                            }
+                        }
+
+                    }
 
 
-            camera.scale = Util.Lerp(camera.scale, cameraScaleLerp, camera.spdScale);
-            cPos.moveSpeed = cPos.baseMoveSpeed + camera.scale * 3.0f;
+                    if (Input.scrollPressed() != 0) {
+                        cameraScaleLerp += 0.2f * Input.scrollPressed();
+                    }
 
-            if (camera.scale < 1.0f) {
-                camera.scale = 1.0f;
-                cameraScaleLerp = 1.0f;
-            } else if (camera.scale > 10.0f) {
-                camera.scale = 10.0f;
-                cameraScaleLerp = 10.0f;
-            }
-
-            // Updates all entities in the world
-            if (world != null) {
-                foreach (Entity entity in world.entities.ToArray()) {
-                    entity.Update(gameTime);
-                }
-                foreach (Actor actor in world.actors.ToArray()) {
-                    actor.Update(gameTime);
-                }
-
-                Tile tile;
-                for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                    for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
-                        tile = world.GetTile(new Vector2(x, y));
-                        if (!(tile is null)) {
-                            tile.Update(gameTime);
-
+                    for (int i = 0; i < Input.numKeys.Count; i++) {
+                        if (Input.keyPressed(Input.numKeys[i])) {
+                            if (selectedBuilding != (Building)(i + 1)) {
+                                selectedBuilding = (Building)(i + 1);
+                            } else {
+                                selectedBuilding = Building.None;
+                            }
                         }
                     }
-                }
+
+
+                    camera.scale = Util.Lerp(camera.scale, cameraScaleLerp, camera.spdScale);
+                    cPos.moveSpeed = cPos.baseMoveSpeed + camera.scale * 3.0f;
+
+                    if (camera.scale < 1.0f) {
+                        camera.scale = 1.0f;
+                        cameraScaleLerp = 1.0f;
+                    } else if (camera.scale > 10.0f) {
+                        camera.scale = 10.0f;
+                        cameraScaleLerp = 10.0f;
+                    }
+
+                    // Updates all entities in the world
+                    if (world != null) {
+                        foreach (Entity entity in world.entities.ToArray()) {
+                            entity.Update(gameTime);
+                        }
+                        foreach (Actor actor in world.actors.ToArray()) {
+                            actor.Update(gameTime);
+                        }
+
+                        Tile tile;
+                        for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
+                            for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
+                                tile = world.GetTile(new Vector2(x, y));
+                                if (!(tile is null)) {
+                                    tile.Update(gameTime);
+
+                                }
+                            }
+                        }
+                    }
+
+
+                    break;
             }
+
 
             base.Update(gameTime);
         }
@@ -372,35 +421,42 @@ namespace Assembee {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             // Special Begin() to utilize the camera
             spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: camera.Transform);
-            
+
 
             // Draws all actors in the world 
             // If we decide all entities will draw, we can update this appropriately. 
-            if (world != null) {
-                foreach(Tile backgroundTile in world.background.ToArray()) {
-                    backgroundTile.Draw(spriteBatch, animTick);
-                }
+            switch (gameState) {
+                case GameState.InGame:
 
-                if (selector != null) {
-                    selector.Draw(spriteBatch, animTick);
-                }
-
-                Tile tile;
-                for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                    for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
-                        tile = world.GetTile(new Vector2(x, y));
-                        if (!(tile is null)) {
-                            tile.Draw(spriteBatch, animTick);
+                    if (world != null) {
+                        foreach (Tile backgroundTile in world.background.ToArray()) {
+                            backgroundTile.Draw(spriteBatch, animTick);
                         }
 
+                        if (selector != null) {
+                            selector.Draw(spriteBatch, animTick);
+                        }
+
+                        Tile tile;
+                        for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
+                            for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
+                                tile = world.GetTile(new Vector2(x, y));
+                                if (!(tile is null)) {
+                                    tile.Draw(spriteBatch, animTick);
+                                }
+                                
+
+                            }
+                        }
+                        foreach (Actor actor in world.actors.ToArray()) {
+                            actor.Draw(spriteBatch, animTick);
+                        }
+                        foreach (Entity entity in world.entities.ToArray()) {
+                            entity.Draw(spriteBatch, animTick);
+                        }
                     }
-                }
-                foreach (Actor actor in world.actors.ToArray()) {
-                    actor.Draw(spriteBatch, animTick);
-                }
-                foreach(Entity entity in world.entities.ToArray()) {
-                    entity.Draw(spriteBatch, animTick);
-                }
+                    break;
+
             }
 
             animTick++;
@@ -420,6 +476,10 @@ namespace Assembee {
 
             //UI
             spriteBatch.Begin();
+
+            if (gameState == GameState.TitleScreen) {
+                spriteBatch.DrawString(font1, "Enter to Load, Space for new", new Vector2(ScreenWidth / 2, 0), Color.White);
+            }
             // Text
             HUD.DrawHud(spriteBatch, world, selectedBuilding);
 

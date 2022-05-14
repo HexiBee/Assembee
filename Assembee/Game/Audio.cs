@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game {
-    class Audio {
+    public class Audio {
         public bool noAudio = false;
         public static List<SoundEffect> soundEffects;
         public static List<SoundEffectInstance> sfxI;

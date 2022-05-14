@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game {
-    class Sprite {
+    public class Sprite {
 
         private const Game1.spr MISSING_TEXTURE = Game1.spr.t_hex;
 
         public float scale = 1.0f;
-        public float rotation = 0.0f;
+        public float rotation { get; set; } = 0.0f;
         public Color color = Color.White;
 
         private Texture2D _texture;

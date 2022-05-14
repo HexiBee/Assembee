@@ -5,15 +5,16 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game.Entities.Tiles {
-    class Flowers : Tile {
+    public class Flowers : Tile {
         //public float nectarAmt = 150;
-        public int nectarAmt = 150, nectarTime = 32;
+        public int nectarAmt = 150;
+        private int nectarTime = 32;
         int tick = 0;
-        public Flowers(Game1.spr texture, Vector2 pos, World world): base(texture, pos, world) {
+        //public Flowers(Game1.spr texture, Vector2 pos, World world): base(texture, pos, world) {
 
-        }
+        //}
 
-        public Flowers(int nectarAmt, Game1.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public Flowers(int nectarAmt, Game1.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
             this.nectarAmt = nectarAmt;
         }
 

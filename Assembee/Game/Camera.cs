@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game {
-    
-    class Camera {
+
+    public class Camera {
 
         public static Vector2 pos1;
         public Matrix Transform;

@@ -19,11 +19,17 @@ namespace Assembee.Game {
         public static Btn One = new Btn(Keys.D1);
         public static Btn Two = new Btn(Keys.D2);
         public static Btn Three = new Btn(Keys.D3);
-        //public static Btn Four = new Btn(Keys.D4);
-
-        public static Btn Deposit = new Btn(Keys.Enter, Keys.Space);
-
+        //public static Btn Four = new Btn(Keys.D4)
         public static List<Btn> numKeys = new List<Btn>() { One, Two, Three };
+
+
+        public static Btn Enter = new Btn(Keys.Enter, Keys.Space);
+
+
+        // DEBUG keys
+        public static Btn NewGame = new Btn(Keys.Space);
+        public static Btn LoadGame = new Btn(Keys.Enter);
+        public static Btn SaveGame = new Btn(Keys.J);
 
 
         static KeyboardState currentKeyState;
@@ -199,7 +205,7 @@ namespace Assembee.Game {
 
         }
 
-        private static Vector2 hexRound(Vector2 coord) {
+        public static Vector2 hexRound(Vector2 coord) {
 
             float x = 0.5f * (SQRT3 * coord.X - coord.Y) * (float)Math.Sqrt(4.0f / 3.0f);
             float y = coord.Y * (float)Math.Sqrt(4.0f / 3.0f);

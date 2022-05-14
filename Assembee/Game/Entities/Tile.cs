@@ -6,19 +6,21 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game.Entities {
-    class Tile : Entity {
+    public class Tile : Entity {
         Matrix2 hexMat = new Matrix2((float)Math.Sqrt(3), (float)Math.Sqrt(3) / 2.0f, 0.0f, 3.0f / 2.0f);
 
         //public static int HONEY_NEEDED = 0;
         //public static int WAX_NEEDED = 0;
 
         public Bee beeInside = null;
-        public Vector2 gridPos;
+        public Vector2 gridPos { get; set; }
 
         public Tile(Game1.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
             this.gridPos = gridPos;
             position = hexMat * new Vector2(gridPos.X * 127, gridPos.Y * 127);
         }
+
+    
 
         public override void Update(GameTime gameTime) {
 

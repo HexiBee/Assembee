@@ -19,16 +19,16 @@ namespace Assembee.Game.Entities {
 
         public override void Update(GameTime gameTime) {
             if (Input.keyDown(Input.Left)) {
-                position.X-=moveSpeed;
+                position = new Vector2(position.X - moveSpeed, position.Y);//-=moveSpeed;
             }
             if (Input.keyDown(Input.Right)) {
-                position.X+=moveSpeed;
+                position = new Vector2(position.X + moveSpeed, position.Y);
             }
             if (Input.keyDown(Input.Up)) {
-                position.Y-=moveSpeed;
+                position = new Vector2(position.X, position.Y - moveSpeed);
             }
             if (Input.keyDown(Input.Down)) {
-                position.Y+=moveSpeed;
+                position = new Vector2(position.X, position.Y + moveSpeed);
             }
 
         }

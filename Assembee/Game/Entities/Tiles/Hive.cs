@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game.Entities.Tiles {
-    class Hive : Tile {
+    public class Hive : Tile {
 
 
         public int honeyAmt = 0, waxAmt = 0, moveTime = 5;
-        int tick = 0;
+        private int tick = 0;
         
         public Hive(Game1.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
-
+            
         }
 
         //public override void Update(GameTime gameTime) {

@@ -12,5 +12,7 @@ namespace Assembee.Game {
         public static void Log(string message) {
             System.Diagnostics.Debug.WriteLine(message);
         }
+
+
     }
 }

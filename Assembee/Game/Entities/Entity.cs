@@ -3,24 +3,29 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Assembee.Game.Entities {
-    class Entity {
+    public class Entity {
 
+        [JsonIgnore]
         public World world;
-        public Vector2 position;
+        public Vector2 position { get; set; }
+
 
         protected bool pauseAnim = false;
-        protected Sprite sprite;
+        protected Sprite sprite { get; set; }
+        public Game1.spr texture { get; set; }
 
         public Entity(Game1.spr texture, Vector2 position, World world) {
             
             this.position = position;
-            this.world = world;
-
-            sprite = new Sprite(texture);
+            this.world = Game1.world;
+            this.texture = texture;
+            sprite = new Sprite(this.texture);
             
         }
+
 
         public virtual void Draw(SpriteBatch spriteBatch, int animTick) {
 

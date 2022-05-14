@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game.Entities {
-    class Bee : Actor {
+    public class Bee : Actor {
         //Texture2D sBee;
 
         public const int NECTAR_LIMIT = 100, HONEY_LIMIT = 20, WAX_LIMIT = 3;
@@ -15,14 +15,31 @@ namespace Assembee.Game.Entities {
         private Tile target;
         private Tile start;
         private float t;
+        private int tick = 0, init = 0;
+
+
 
         public Bee(Game1.spr textureSpr, Vector2 pos, World world) : base(textureSpr, pos, world) {
-            start = world.GetTile(pos);
-            position = start.position;
-            start.beeInside = this;
+            //this.world = Game1.world;
+            //Util.Log("p: " + Game1.world.GetTile(new Vector2(0, 0)).ToString());
+
+            //Util.Log("Pos: " + this.position.ToString());
+            //Util.Log(Input.hexRound(this.position).ToString());
+            start = Game1.world.GetTile(position);
+            if (start != null) {
+                position = start.position;
+                start.beeInside = this;
+            } else {
+                Util.Log("BEE: NULL TILE");
+            }
+            
         }
+        
 
         public void SetTarget(Tile target) {
+            if (start == null) {
+                start = Game1.world.GetTile(this.position);
+            }
             foreach (Bee bee in world.bees.ToArray()) {
                 if (bee == this) continue;
                 if (bee.target == target) return;
@@ -37,6 +54,23 @@ namespace Assembee.Game.Entities {
         }
 
         public override void Update(GameTime gameTime) {
+
+            // THIS STUFF DIDNT WANT TO WORK IN THE CONSTRUCTOR BECAUSE OF LOADING
+            if (init == 0) { 
+                Tile s = world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3))));
+            //if (s != null) {
+                Util.Log("bee tile: " + world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3)))).ToString());
+                start = world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3))));
+                position = start.position;
+                start.beeInside = this;
+                //} else {
+                //Util.Log("??");
+                init++;
+            }
+            
+
+            
+
             if (target != null) {
 
                 position = Vector2.Lerp(start.position, target.position, t);
@@ -50,7 +84,9 @@ namespace Assembee.Game.Entities {
                     target = null;
                     world.audio.StopSound(Audio.sfx.bee);
                 }
-            } 
+            }
+
+            //tick++;
         }
     }
 }

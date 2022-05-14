@@ -10,8 +10,8 @@ namespace Assembee.Game.Entities.Tiles
 
         int tick = 0, honeyOutputTime = 5;
 
-        public HoneyOutput(Game1.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
-            
+        public HoneyOutput(Game1.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
+
         }
 
         public override void Update(GameTime gameTime) {
