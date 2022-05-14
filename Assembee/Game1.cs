@@ -114,6 +114,9 @@ namespace Assembee {
             // Sets the initial resolution
             //graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = ScreenWidth;
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnResize;
+
             graphics.PreferredBackBufferHeight = ScreenHeight;
             graphics.ApplyChanges();
 
@@ -162,6 +165,10 @@ namespace Assembee {
 
             //StartGame();
 
+        }
+
+        private void OnResize(object sender, EventArgs e) {
+            Resolution(Window.ClientBounds.Width, Window.ClientBounds.Height, false);
         }
 
         public void FreshStart() {
