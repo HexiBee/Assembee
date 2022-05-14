@@ -11,13 +11,15 @@ namespace Assembee.Game {
 
         public float scale = 1.0f;
         public float rotation { get; set; } = 0.0f;
-        public Color color = Color.White;
+        public Color color { get; set; } = Color.White;
+        public Game1.spr registryEnum { get; set; }
 
         private Texture2D _texture;
         private int _frameHeight;
         private int _animFrames;
 
         public Sprite(Game1.spr registryEnum) {
+            this.registryEnum = registryEnum;
 
             if (!Game1.TextureRegistry.TryGetValue(registryEnum, out _texture)) 
                 Game1.TextureRegistry.TryGetValue(MISSING_TEXTURE, out _texture);
@@ -46,6 +48,7 @@ namespace Assembee.Game {
             );
 
         }
+
 
     }
 }

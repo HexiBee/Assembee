@@ -9,6 +9,8 @@ using System.Xml.Serialization;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Assembee.Game.Entities.Tiles;
+using System.Security.AccessControl;
+
 
 namespace Assembee.Game {
 
@@ -47,12 +49,30 @@ namespace Assembee.Game {
 
         }
 
+        public static void Save(World world) {
+
+            SaveData saveData = GetSaveData(world);
+
+
+            using (StreamWriter wrt = new StreamWriter(fileName)) {
+                wrt.WriteLine(JsonConvert.SerializeObject(saveData, Formatting.Indented, settings));
+            }
+            //File.Encrypt(fileName);
+
+        }
+
+
+        public static SaveData GetSaveData(World world) {
+            return new SaveData(world.bees, world.tileList);
+        }
+
 
 
         public static bool Load(World world) {
             if (!File.Exists(fileName)) {
                 return false; // failure, start new game
             }
+            //File.Decrypt(fileName);
             var fileContents = File.ReadAllText(fileName);
             
             SaveData readData = JsonConvert.DeserializeObject<SaveData>(fileContents, settings);
@@ -75,19 +95,6 @@ namespace Assembee.Game {
 
         }
 
-        public static void Save(World world) {
 
-            SaveData saveData = GetSaveData(world);
-           
-
-            using (StreamWriter wrt = new StreamWriter(fileName)) {
-                wrt.WriteLine(JsonConvert.SerializeObject(saveData, Formatting.Indented, settings));
-            }
-
-        }
-
-        public static SaveData GetSaveData(World world) {
-            return new SaveData(world.bees, world.tileList);  
-        }
     }
 }

@@ -14,7 +14,9 @@ namespace Assembee.Game.Entities {
 
 
         protected bool pauseAnim = false;
-        protected Sprite sprite { get; set; }
+        //[JsonIgnore]
+        public Sprite sprite { get; set; }
+
         public Game1.spr texture { get; set; }
 
         public Entity(Game1.spr texture, Vector2 position, World world) {
@@ -39,5 +41,14 @@ namespace Assembee.Game.Entities {
         protected virtual int animFrameFromTick(int animTick) {
             return animTick / 5;
         }
+        public bool ShouldSerializesprite() {
+            if (sprite.color == Color.White && 
+                sprite.rotation == 0.0f &&
+                sprite.scale == 1.0f) {
+                return false;
+            }
+            return true;
+        }
+
     }
 }
