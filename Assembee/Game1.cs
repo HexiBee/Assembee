@@ -89,7 +89,7 @@ namespace Assembee {
             TitleScreen,
             InGame,
         }
-        public GameState gameState = GameState.TitleScreen;
+        public static GameState gameState = GameState.TitleScreen;
 
 
         public Game1() {
@@ -477,9 +477,6 @@ namespace Assembee {
             //UI
             spriteBatch.Begin();
 
-            if (gameState == GameState.TitleScreen) {
-                spriteBatch.DrawString(font1, "Enter to Load, Space for new", new Vector2(ScreenWidth / 2, 0), Color.White);
-            }
             // Text
             HUD.DrawHud(spriteBatch, world, selectedBuilding);
 

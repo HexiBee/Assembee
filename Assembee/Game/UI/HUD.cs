@@ -21,9 +21,21 @@ namespace Assembee.Game.Entities {
         private static Panel beePanel = new Panel(root, new Vector2(0, 0), new Vector2(230, 165), Element.Orientation.UpperLeft);
         private static Text beeText = new Text(beePanel, "Bee:", Vector2.Zero, 0.8f, Element.Orientation.Center);
 
+        private static Panel menuPanel = new Panel(root, new Vector2(0, 0), new Vector2(100, 100), Element.Orientation.Center);
+        private static Text menuText1 = new Text(menuPanel, "Assembee", new Vector2(0, 0), 1.0f, Element.Orientation.Center);
+        private static Text menuText2 = new Text(menuPanel, "Press [SPACE] to load a new game", new Vector2(0, 0), 0.7f, Element.Orientation.Center);
+        private static Text menuText3 = new Text(menuPanel, "Press [ENTER] to load previous game", new Vector2(0, 0), 0.7f, Element.Orientation.Center);
+
         public static void DrawHud(SpriteBatch spriteBatch, World world, Game1.Building building) {
 
             root.updateSize();
+
+            if (Game1.gameState == Game1.GameState.TitleScreen) {
+                menuPanel.PackVert(10.0f);
+                menuPanel.active = true;
+            } else {
+                menuPanel.active = false;
+            }
 
             if (building != Game1.Building.None) {
                 string buildingString;
@@ -44,7 +56,7 @@ namespace Assembee.Game.Entities {
                         break;
                 }
                 buildText.SetString(buildingString);
-                buildPanel.FitToChildren(20.0f);
+                buildPanel.FitToChildren(10.0f);
                 buildPanel.active = true;
             } else {
                 buildPanel.active = false;
@@ -53,7 +65,7 @@ namespace Assembee.Game.Entities {
             if (!(world.selectedTile is null)) {
                 string tileString = world.selectedTile.GetInfoString();
                 tileText.SetString(tileString);
-                tilePanel.FitToChildren(20.0f);
+                tilePanel.FitToChildren(10.0f);
                 tilePanel.active = true;
             } else {
                 tilePanel.active = false;
@@ -66,7 +78,7 @@ namespace Assembee.Game.Entities {
                     "\nWax: " + ((int)world.selectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString();
 
                 beeText.SetString(beeString);
-                beePanel.FitToChildren(20.0f);
+                beePanel.FitToChildren(10.0f);
                 beePanel.active = true;
             } else {
                 beePanel.active = false;
