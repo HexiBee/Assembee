@@ -24,7 +24,7 @@ namespace Assembee.Game {
 
 
         public static Btn Enter = new Btn(Keys.Enter);
-
+        public static Btn Mute = new Btn(Keys.M);
 
         // DEBUG keys
         public static Btn NewGame = new Btn(Keys.Space);

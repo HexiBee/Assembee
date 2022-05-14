@@ -8,8 +8,11 @@ using System.Text;
 namespace Assembee.Game {
     public class Audio {
         public bool noAudio = false;
+        public bool muted = false;
         public static List<SoundEffect> soundEffects;
         public static List<SoundEffectInstance> sfxI;
+        public float volumeMusic = 0.1f;
+        public float volumeSfx = 1f;
 
         public enum sfx {
             click,
@@ -71,6 +74,19 @@ namespace Assembee.Game {
         void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e) {
             // 0.0f is silent, 1.0f is full volume
             //MediaPlayer.Play(song);
+        }
+
+        public void ToggleMute() {
+            if (!muted) {
+                MediaPlayer.Volume = 0f;
+                SoundEffect.MasterVolume = 0f;
+                muted = true;
+                
+            } else {
+                MediaPlayer.Volume = volumeMusic;
+                SoundEffect.MasterVolume = volumeSfx;
+                muted = false;
+            }
         }
 
 

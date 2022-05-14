@@ -231,7 +231,7 @@ namespace Assembee {
             if (!audio.noAudio) {
                 MediaPlayer.Play(audio.song);
                 MediaPlayer.IsRepeating = true;
-                MediaPlayer.Volume = 0.1f;
+                MediaPlayer.Volume = audio.volumeMusic;
             }
             world.audio = audio;
 
@@ -304,6 +304,10 @@ namespace Assembee {
                     }
 
                     //end debug
+
+                    if (Input.keyPressed(Input.Mute)) {
+                        audio.ToggleMute();
+                    }
 
                     if (camera != null)
                         camera.Follow();
