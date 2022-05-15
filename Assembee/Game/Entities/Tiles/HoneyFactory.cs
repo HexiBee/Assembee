@@ -15,7 +15,7 @@ namespace Assembee.Game.Entities.Tiles {
         //public int honeyAmt = 0;//, nectarAmt = 0;
         int tick = 0, nectarProcessTime = 38, nectarProcessed = 0, nectarNeeded = 4;
 
-        public HoneyFactory(Game1.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public HoneyFactory(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
 
         }
 

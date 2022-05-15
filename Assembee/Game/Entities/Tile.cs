@@ -15,7 +15,7 @@ namespace Assembee.Game.Entities {
         public Bee beeInside = null;
         public Vector2 gridPos { get; set; }
 
-        public Tile(Game1.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
+        public Tile(ContentRegistry.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
             this.gridPos = gridPos;
             position = hexMat * new Vector2(gridPos.X * 127, gridPos.Y * 127);
         }

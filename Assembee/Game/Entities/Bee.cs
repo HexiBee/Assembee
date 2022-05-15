@@ -19,7 +19,7 @@ namespace Assembee.Game.Entities {
 
 
 
-        public Bee(Game1.spr textureSpr, Vector2 pos, World world) : base(textureSpr, pos, world) {
+        public Bee(ContentRegistry.spr textureSpr, Vector2 pos, World world) : base(textureSpr, pos, world) {
             //this.world = Game1.world;
             //Util.Log("p: " + Game1.world.GetTile(new Vector2(0, 0)).ToString());
 

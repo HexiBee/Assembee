@@ -7,20 +7,20 @@ using System.Text;
 namespace Assembee.Game.UI {
     class Panel : Element {
 
-        private const Game1.spr DEFAULT_SPRITE = Game1.spr.u_panel;
+        private const ContentRegistry.spr DEFAULT_SPRITE = ContentRegistry.spr.u_panel;
 
         private NineSliceTexture texture;
 
         public Panel(Element parent, Vector2 position, Vector2 size, Orientation anchor, Orientation origin) : base(parent, position, size, anchor, origin) {
             Texture2D temp;
-            Game1.TextureRegistry.TryGetValue(DEFAULT_SPRITE, out temp);
+            temp = ContentRegistry.GetTexture(DEFAULT_SPRITE);
             texture = new NineSliceTexture(temp, 10.0f);
         
         }
 
         public Panel(Element parent, Vector2 position, Vector2 size, Orientation anchor) : base(parent, position, size, anchor) {
             Texture2D temp;
-            Game1.TextureRegistry.TryGetValue(DEFAULT_SPRITE, out temp);
+            temp = ContentRegistry.GetTexture(DEFAULT_SPRITE);
             texture = new NineSliceTexture(temp, 10.0f);
         }
 

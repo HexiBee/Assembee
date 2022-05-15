@@ -69,6 +69,24 @@ namespace Assembee.Game.UI {
             size = rect.Size.ToVector2() + Vector2.One * margin * 2;
         }
 
+        public virtual bool IntersectingGlobalPoint(Point point) {
+            if (!active) return false;
+
+            Rectangle rect = new Rectangle(getDrawPosition().ToPoint(), size.ToPoint());
+
+            if (rect.Contains(point)) {
+                return true;
+            }
+
+            foreach (Element child in children) {
+                if (child.IntersectingGlobalPoint(point)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         protected virtual void Draw(SpriteBatch spriteBatch) {
             foreach (Element child in children.ToArray()) {
                 if (child.active)

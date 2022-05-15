@@ -37,8 +37,8 @@ namespace Assembee.Game {
               0);
 
             var offset = Matrix.CreateTranslation(
-                (Game1.ScreenWidth - Game1.ScreenWidth / 2)/(1/scale),
-                (Game1.ScreenHeight - Game1.ScreenHeight / 2) / (1/scale),
+                (Game1.windowHandler.windowWidth / 2)/(1/scale),
+                (Game1.windowHandler.windowHeight / 2) / (1/scale),
                 0);
 
             pos1.X = position.M41;

@@ -7,7 +7,7 @@ using System.Text;
 namespace Assembee.Game.UI {
     class Root : Element {
 
-        public Root() : base(null, Vector2.Zero, new Vector2(Game1.ScreenWidth, Game1.ScreenHeight)) {
+        public Root() : base(null, Vector2.Zero, new Vector2(Game1.windowHandler.windowWidth, Game1.windowHandler.windowHeight)) {
         }
 
         protected override Vector2 getDrawPosition() {
@@ -19,8 +19,18 @@ namespace Assembee.Game.UI {
         }
 
         public void updateSize() {
-            size.X = Game1.ScreenWidth;
-            size.Y = Game1.ScreenHeight;
+            size.X = Game1.windowHandler.windowWidth;
+            size.Y = Game1.windowHandler.windowHeight;
+        }
+
+        public override bool IntersectingGlobalPoint(Point point) {
+            foreach (Element child in children) {
+                if (child.IntersectingGlobalPoint(point)) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
     }

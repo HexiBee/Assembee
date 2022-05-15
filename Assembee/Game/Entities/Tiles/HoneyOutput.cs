@@ -10,7 +10,7 @@ namespace Assembee.Game.Entities.Tiles
 
         int tick = 0, honeyOutputTime = 5;
 
-        public HoneyOutput(Game1.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
+        public HoneyOutput(ContentRegistry.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
 
         }
 

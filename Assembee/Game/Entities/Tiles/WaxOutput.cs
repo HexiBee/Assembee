@@ -10,7 +10,7 @@ namespace Assembee.Game.Entities.Tiles
 
         int tick = 0, waxOutputTime = 5;
 
-        public WaxOutput(Game1.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public WaxOutput(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
             
         }
 

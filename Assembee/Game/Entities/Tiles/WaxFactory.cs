@@ -13,7 +13,7 @@ namespace Assembee.Game.Entities.Tiles {
         static int HONEY_NEEDED = 15;
         static int WAX_NEEDED = 5;
         static string NAME = "Wax Factory";
-        public WaxFactory(Game1.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public WaxFactory(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
             
     }
 

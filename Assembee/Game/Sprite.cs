@@ -7,25 +7,20 @@ using System.Text;
 namespace Assembee.Game {
     public class Sprite {
 
-        private const Game1.spr MISSING_TEXTURE = Game1.spr.t_hex;
-
         public float scale = 1.0f;
         public float rotation { get; set; } = 0.0f;
         public Color color { get; set; } = Color.White;
-        public Game1.spr registryEnum { get; set; }
+        public ContentRegistry.spr registryEnum { get; set; }
 
         private Texture2D _texture;
         private int _frameHeight;
         private int _animFrames;
 
-        public Sprite(Game1.spr registryEnum) {
+        public Sprite(ContentRegistry.spr registryEnum) {
             this.registryEnum = registryEnum;
 
-            if (!Game1.TextureRegistry.TryGetValue(registryEnum, out _texture)) 
-                Game1.TextureRegistry.TryGetValue(MISSING_TEXTURE, out _texture);
-
-            if (!Game1.AnimationRegistry.TryGetValue(registryEnum, out _frameHeight))
-                _frameHeight = _texture.Height;
+            _texture = ContentRegistry.GetTexture(registryEnum);
+            _frameHeight = ContentRegistry.GetFrameHeight(registryEnum);
 
             _animFrames = _texture.Height / _frameHeight;
 

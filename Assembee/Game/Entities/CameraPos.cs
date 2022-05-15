@@ -13,7 +13,7 @@ namespace Assembee.Game.Entities {
         public Vector2 mOffset;
 
 
-        public CameraPos(Game1.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public CameraPos(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
 
         }
 

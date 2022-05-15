@@ -16,6 +16,8 @@ namespace Assembee.Game {
         public List<Tile> background = new List<Tile>();
         public Tile selectedTile;
 
+        public Tile Selector;
+
         public Camera camera;
         public Audio audio;
         public Hive hive;
@@ -49,7 +51,6 @@ namespace Assembee.Game {
                 hive = (Hive)tile;
             }
         }
-
 
         public void AddBackground(Tile tile) {
             background.Add(tile);

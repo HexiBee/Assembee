@@ -10,7 +10,7 @@ namespace Assembee.Game.Entities.Tiles {
         static int HONEY_NEEDED = 5;
         static int WAX_NEEDED = 5;
         static string NAME = "Apartment";
-        public Apartment(Game1.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
+        public Apartment(ContentRegistry.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
 
             
         }

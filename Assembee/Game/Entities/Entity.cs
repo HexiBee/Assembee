@@ -17,9 +17,9 @@ namespace Assembee.Game.Entities {
         //[JsonIgnore]
         public Sprite sprite { get; set; }
 
-        public Game1.spr texture { get; set; }
+        public ContentRegistry.spr texture { get; set; }
 
-        public Entity(Game1.spr texture, Vector2 position, World world) {
+        public Entity(ContentRegistry.spr texture, Vector2 position, World world) {
             
             this.position = position;
             this.world = Game1.world;

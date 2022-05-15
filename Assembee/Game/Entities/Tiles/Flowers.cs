@@ -14,7 +14,7 @@ namespace Assembee.Game.Entities.Tiles {
 
         //}
 
-        public Flowers(int nectarAmt, Game1.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
+        public Flowers(int nectarAmt, ContentRegistry.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
             this.nectarAmt = nectarAmt;
         }
 
