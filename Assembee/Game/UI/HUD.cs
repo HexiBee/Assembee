@@ -26,21 +26,24 @@ namespace Assembee.Game.Entities {
         private static Frame menuUI = new Frame(root);
 
         private static Panel menuPanel = new Panel(menuUI, new Vector2(0, 0), new Vector2(100, 100), Element.Orientation.Center);
-        private static Text menuText1 = new Text(menuPanel, "Assembee", new Vector2(0, 0), 1.0f, Element.Orientation.Center);
-        private static Text menuText2 = new Text(menuPanel, "Press [SPACE] to load a new game", new Vector2(0, 0), 0.7f, Element.Orientation.Center);
-        private static Text menuText3 = new Text(menuPanel, "Press [ENTER] to load previous game", new Vector2(0, 0), 0.7f, Element.Orientation.Center);
-
-        private static bool menuInit = false;
+        private static Text menuText = new Text(menuPanel, "Assembee", new Vector2(0, 0), 1.5f, Element.Orientation.Center);
+        private static Button newButton = new Button(menuPanel, "New Game", 1.0f, new Vector2(0, 0), new Vector2(10, 10), Element.Orientation.Center);
+        private static Button loadButton = new Button(menuPanel, "Load Save", 1.0f, new Vector2(0, 0), new Vector2(10, 10), Element.Orientation.Center);
 
         public static bool OverActiveElement(Point point) {
             return root.IntersectingGlobalPoint(point);
         }
 
+        public static void InitHUD(Game1 game) {
+            newButton.FitToChildren(10.0f);
+            loadButton.FitToChildren(10.0f);
+            menuPanel.PackVert(10.0f);
+
+            newButton.AssignFunction(game.NewGame);
+            loadButton.AssignFunction(game.LoadGame);
+        }
+
         public static void DrawMenu(SpriteBatch spriteBatch) {
-            if (!menuInit) {
-                menuPanel.PackVert(10.0f);
-                menuInit = true;
-            }
             root.updateSize();
             menuUI.active = true;
             gameUI.active = false;

@@ -74,11 +74,26 @@ namespace Assembee {
             camera = new Camera(cPos);
             world.camera = camera;
 
+            HUD.InitHUD(this);
+
             //StartGame();
 
         }
 
-        public void FreshStart() {
+        public void NewGame() {
+            StartGame(true);
+            gameState = GameState.InGame;
+        }
+
+        public void LoadGame() {
+            StartGame(false);
+            if (!SaveManager.Load(world)) {
+                GenerateWorld();
+            }
+            gameState = GameState.InGame;
+        }
+
+        private void GenerateWorld() {
             Hive hive = new Hive(ContentRegistry.spr.t_hive, new Vector2(0, 0), world);
             Bee bee = new Bee(ContentRegistry.spr.a_bee, new Vector2(0, 0), world);
 
@@ -107,13 +122,6 @@ namespace Assembee {
         }
         // This probably shouldn't be put here...
         public void StartGame(bool freshStart) {
-            //world = new World();
-
-            // RELOCATED NOW
-            //cPos = new CameraPos(spr.a_bee_up, new Vector2(0, 0), world);
-            //world.Add(cPos);
-            //camera = new Camera(cPos);
-
 
             for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
                 for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
@@ -122,7 +130,7 @@ namespace Assembee {
             }
 
             if (freshStart) {
-                FreshStart();
+                GenerateWorld();
             }
 
             cameraScaleLerp = camera.scale;
@@ -154,19 +162,6 @@ namespace Assembee {
 
             switch (gameState) {
                 case GameState.TitleScreen:
-                    if (Input.keyPressed(Input.NewGame)) {
-                        StartGame(true);
-                        gameState = GameState.InGame;
-                    }
-
-                    if (Input.keyPressed(Input.LoadGame)) {
-                        StartGame(false);
-                        if (!SaveManager.Load(world)) {
-                            FreshStart();
-                        }
-                        gameState = GameState.InGame;
-
-                    }
                     break;
 
                 case GameState.InGame:
@@ -326,6 +321,7 @@ namespace Assembee {
                     windowHandler.RenderWorld();
                     windowHandler.RenderHUD(selectedBuilding);
                     break;
+
                 case GameState.TitleScreen:
                     windowHandler.RenderMenu();
                     break;
