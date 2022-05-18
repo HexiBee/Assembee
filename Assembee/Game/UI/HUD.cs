@@ -34,13 +34,13 @@ namespace Assembee.Game.Entities {
             return root.IntersectingGlobalPoint(point);
         }
 
-        public static void InitHUD(Game1 game) {
+        public static void InitHUD(World world) {
             newButton.FitToChildren(10.0f);
             loadButton.FitToChildren(10.0f);
             menuPanel.PackVert(10.0f);
 
-            newButton.AssignFunction(game.NewGame);
-            loadButton.AssignFunction(game.LoadGame);
+            newButton.AssignFunction(world.NewGame);
+            loadButton.AssignFunction(world.LoadGame);
         }
 
         public static void DrawMenu(SpriteBatch spriteBatch) {

@@ -50,6 +50,11 @@ namespace Assembee.Game {
             }
         }
 
+        public void StartSong() {
+            MediaPlayer.Play(song);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = volumeMusic;
+        }
 
         public void PlaySound(sfx sound, float vol, float pitch) {
             if (!noAudio) {

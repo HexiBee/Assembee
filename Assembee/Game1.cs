@@ -16,7 +16,7 @@ namespace Assembee {
         public static WindowHandler windowHandler;
 
         CameraPos cPos;
-        Audio audio;
+        public static Audio audio;
         public static SpriteFont font1;
 
         public enum Building {
@@ -29,8 +29,6 @@ namespace Assembee {
         Building selectedBuilding = Building.None;
 
         Camera camera;
-
-        float cameraScaleLerp;
 
         public enum GameState {
             TitleScreen,
@@ -74,76 +72,15 @@ namespace Assembee {
             camera = new Camera(cPos);
             world.camera = camera;
 
-            HUD.InitHUD(this);
+            HUD.InitHUD(world);
 
             //StartGame();
 
         }
 
-        public void NewGame() {
-            StartGame(true);
-            gameState = GameState.InGame;
-        }
 
-        public void LoadGame() {
-            StartGame(false);
-            if (!SaveManager.Load(world)) {
-                GenerateWorld();
-            }
-            gameState = GameState.InGame;
-        }
-
-        private void GenerateWorld() {
-            Hive hive = new Hive(ContentRegistry.spr.t_hive, new Vector2(0, 0), world);
-            Bee bee = new Bee(ContentRegistry.spr.a_bee, new Vector2(0, 0), world);
-
-            world.Add(bee);
-            hive.beeInside = bee;
-            world.Add(hive);
-
-
-            world.Add(new HoneyOutput(ContentRegistry.spr.t_helipad_honey, new Vector2(0, 1), world));
-            world.Add(new WaxOutput(ContentRegistry.spr.t_helipad_wax, new Vector2(-1, 1), world));
-
-            world.Add(new HoneyFactory(ContentRegistry.spr.t_honey_producer, new Vector2(1, 0), world));
-            world.Add(new WaxFactory(ContentRegistry.spr.t_wax_producer, new Vector2(-1, 0), world));
-            world.Add(new Apartment(ContentRegistry.spr.t_apartments, new Vector2(1, -1), world));
-
-            Random rand = new Random();
-            for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
-                    if (rand.NextDouble() < 0.05 && world.GetTile(new Vector2(x, y)) is null) {
-                        Random r = new Random();
-                        int amt = r.Next(300, 650);
-                        world.Add(new Flowers(amt, ContentRegistry.spr.t_flowers, new Vector2(x, y), world));
-                    }
-                }
-            }
-        }
-        // This probably shouldn't be put here...
-        public void StartGame(bool freshStart) {
-
-            for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
-                    world.AddBackground(new Tile(ContentRegistry.spr.t_grass_0, new Vector2(x, y), world));
-                }
-            }
-
-            if (freshStart) {
-                GenerateWorld();
-            }
-
-            cameraScaleLerp = camera.scale;
-            
-
-            if (!audio.noAudio) {
-                MediaPlayer.Play(audio.song);
-                MediaPlayer.IsRepeating = true;
-                MediaPlayer.Volume = audio.volumeMusic;
-            }
-            world.audio = audio;
-
-        }
+        
+        
 
         protected override void Update(GameTime gameTime) {
             // Check for released
@@ -259,9 +196,7 @@ namespace Assembee {
                     }
 
 
-                    if (Input.scrollPressed() != 0) {
-                        cameraScaleLerp += 0.2f * Input.scrollPressed();
-                    }
+                    
 
                     for (int i = 0; i < Input.numKeys.Count; i++) {
                         if (Input.keyPressed(Input.numKeys[i])) {
@@ -274,16 +209,7 @@ namespace Assembee {
                     }
 
 
-                    camera.scale = Util.Lerp(camera.scale, cameraScaleLerp, camera.spdScale);
-                    cPos.moveSpeed = cPos.baseMoveSpeed + camera.scale * 3.0f;
-
-                    if (camera.scale < 1.0f) {
-                        camera.scale = 1.0f;
-                        cameraScaleLerp = 1.0f;
-                    } else if (camera.scale > 10.0f) {
-                        camera.scale = 10.0f;
-                        cameraScaleLerp = 10.0f;
-                    }
+                    
 
                     // Updates all entities in the world
                     if (world != null) {

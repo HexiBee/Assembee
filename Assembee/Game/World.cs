@@ -81,6 +81,71 @@ namespace Assembee.Game {
         public static Vector2 GridPosToPos(Vector2 gridPos) {
             return new Matrix2((float)Math.Sqrt(3), (float)Math.Sqrt(3) / 2.0f, 0.0f, 3.0f / 2.0f) * new Vector2(gridPos.X * 127, gridPos.Y * 127);
         }
-   
+
+
+
+        public void StartGame(bool freshStart) {
+
+            for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
+                for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
+                    this.AddBackground(new Tile(ContentRegistry.spr.t_grass_0, new Vector2(x, y), this));
+                }
+            }
+
+            if (freshStart) {
+                GenerateWorld();
+            }
+
+            camera.scaleLerp = camera.scale;
+
+
+            if (!Game1.audio.noAudio) {
+                Game1.audio.StartSong();
+            }
+            audio = Game1.audio;
+
+        }
+        private void GenerateWorld() {
+            Hive hive = new Hive(ContentRegistry.spr.t_hive, new Vector2(0, 0), this);
+            Bee bee = new Bee(ContentRegistry.spr.a_bee, new Vector2(0, 0), this);
+
+            Add(bee);
+            hive.beeInside = bee;
+            Add(hive);
+
+
+            Add(new HoneyOutput(ContentRegistry.spr.t_helipad_honey, new Vector2(0, 1), this));
+            Add(new WaxOutput(ContentRegistry.spr.t_helipad_wax, new Vector2(-1, 1), this));
+
+            Add(new HoneyFactory(ContentRegistry.spr.t_honey_producer, new Vector2(1, 0), this));
+            Add(new WaxFactory(ContentRegistry.spr.t_wax_producer, new Vector2(-1, 0), this));
+            Add(new Apartment(ContentRegistry.spr.t_apartments, new Vector2(1, -1), this));
+
+            Random rand = new Random();
+            for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
+                for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
+                    if (rand.NextDouble() < 0.05 && GetTile(new Vector2(x, y)) is null) {
+                        Random r = new Random();
+                        int amt = r.Next(300, 650);
+                        Add(new Flowers(amt, ContentRegistry.spr.t_flowers, new Vector2(x, y), this));
+                    }
+                }
+            }
+        }
+
+        public void NewGame() {
+            StartGame(true);
+            Game1.gameState = Game1.GameState.InGame;
+        }
+
+        public void LoadGame() {
+            StartGame(false);
+            if (!SaveManager.Load(this)) {
+                GenerateWorld();
+            }
+            Game1.gameState = Game1.GameState.InGame;
+        }
+
     }
+
 }

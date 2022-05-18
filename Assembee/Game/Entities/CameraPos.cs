@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game.Entities {
-    class CameraPos : Actor {
+    public class CameraPos : Actor {
 
         public float moveSpeed = 4.0f;
         public float baseMoveSpeed = 4.0f;
