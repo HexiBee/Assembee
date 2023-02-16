@@ -79,8 +79,8 @@ namespace Assembee {
         }
 
 
-        
-        
+
+
 
         protected override void Update(GameTime gameTime) {
             // Check for released

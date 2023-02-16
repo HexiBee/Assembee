@@ -10,8 +10,6 @@ using Microsoft.Xna.Framework.Input.Touch;
 namespace Assembee.Game {
     class Input {
 
-
-        //public static Btn Up = new Btn(new List<Keys>() { Keys.W, Keys.Up }, new List<Buttons>() { Buttons.LeftThumbstickUp, Buttons.DPadUp });
         public static Btn Up = new Btn(Keys.W, Keys.Up, Buttons.LeftThumbstickUp, Buttons.DPadUp);
         public static Btn Down = new Btn(Keys.S, Keys.Down, Buttons.LeftThumbstickDown, Buttons.DPadDown);
         public static Btn Left = new Btn(Keys.A, Keys.Left, Buttons.LeftThumbstickLeft, Buttons.DPadLeft);
@@ -19,7 +17,6 @@ namespace Assembee.Game {
         public static Btn One = new Btn(Keys.D1);
         public static Btn Two = new Btn(Keys.D2);
         public static Btn Three = new Btn(Keys.D3);
-        //public static Btn Four = new Btn(Keys.D4)
         public static List<Btn> numKeys = new List<Btn>() { One, Two, Three };
 
 
@@ -214,7 +211,7 @@ namespace Assembee.Game {
         }
 
             //direction: -1 is up, 1 is down  ?
-            public static int scrollPressed() {
+        public static int scrollPressed() {
             if (currentScrollValue < previousScrollValue) {
                 return 1;
             } else if (currentScrollValue > previousScrollValue) {

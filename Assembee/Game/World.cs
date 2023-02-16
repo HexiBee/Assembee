@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Assembee.Game {
+    /// <summary>
+    /// Holds all of the data pertaining to a world including entities, actors, background tiles, bees.
+    /// </summary>
     public class World {
 
         public const int WORLD_GRID_SIZE = 100;
@@ -31,15 +34,24 @@ namespace Assembee.Game {
         public World() {
         }
 
+        /// <summary>
+        /// Adds a bee to the world.
+        /// </summary>
         public void Add(Bee bee) {
             actors.Add(bee);
             bees.Add(bee);
         }
 
+        /// <summary>
+        /// Adds an actor to the world.
+        /// </summary>
         public void Add(Actor actor) {
             actors.Add(actor);
         }
 
+        /// <summary>
+        /// Adds or replaces a tile in the world.
+        /// </summary>
         public void Add(Tile tile) {
             Tile tOld = GetTile(tile.gridPos);
             if (tOld != null) {
@@ -52,38 +64,65 @@ namespace Assembee.Game {
             }
         }
 
+        /// <summary>
+        /// Adds a background tile to the world.
+        /// </summary>
         public void AddBackground(Tile tile) {
             background.Add(tile);
         }
 
+        /// <summary>
+        /// Adds an entity into the world.
+        /// </summary>\
         public void Add(Entity entity) {
             entities.Add(entity);
         }
 
+        /// <summary>
+        /// Gets a tile from a given grid position.
+        /// </summary>
+        /// <param name="gridPos">The grid position from where to retrieve the tile</param>
+        /// <returns>The tile at gridPos</returns>
         public Tile GetTile(Vector2 gridPos) {
             if (!InBounds(gridPos)) return null;
             return tiles[(int)gridPos.X + WORLD_GRID_SIZE, (int)gridPos.Y + WORLD_GRID_SIZE];
         }
 
-        public void SetTile(Vector2 gridPos, Tile tile) {
+        /// <summary>
+        /// Do not use this.
+        /// </summary>
+        private void SetTile(Vector2 gridPos, Tile tile) {
             if (!InBounds(gridPos)) return;
             tiles[(int)gridPos.X + WORLD_GRID_SIZE, (int)gridPos.Y + WORLD_GRID_SIZE] = tile;
         }
 
+        /// <summary>
+        /// Removes a tile from the world.
+        /// </summary>
         public void Remove(Tile tile) {
             tiles[(int)tile.gridPos.X + WORLD_GRID_SIZE, (int)tile.gridPos.Y + WORLD_GRID_SIZE] = null;
         }
 
+        /// <summary>
+        /// Whether or not the gridPos is within the world.
+        /// </summary>
         private bool InBounds(Vector2 gridPos) {
             return (gridPos.X < WORLD_GRID_SIZE && gridPos.X > -WORLD_GRID_SIZE && gridPos.Y < WORLD_GRID_SIZE && gridPos.Y > -WORLD_GRID_SIZE);
         }
 
+        /// <summary>
+        /// Convert a gridPos to a world position.
+        /// </summary>
+        /// <param name="gridPos"></param>
+        /// <returns></returns>
         public static Vector2 GridPosToPos(Vector2 gridPos) {
             return new Matrix2((float)Math.Sqrt(3), (float)Math.Sqrt(3) / 2.0f, 0.0f, 3.0f / 2.0f) * new Vector2(gridPos.X * 127, gridPos.Y * 127);
         }
 
-
-
+        /// <summary>
+        /// Starts the game.
+        /// </summary>
+        /// <param name="freshStart">Whether or not to load from a save file.</param>
         public void StartGame(bool freshStart) {
 
             for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
@@ -105,6 +144,10 @@ namespace Assembee.Game {
             audio = Game1.audio;
 
         }
+
+        /// <summary>
+        /// Generates a new world with starting buildings and random flowers
+        /// </summary>
         private void GenerateWorld() {
             Hive hive = new Hive(ContentRegistry.spr.t_hive, new Vector2(0, 0), this);
             Bee bee = new Bee(ContentRegistry.spr.a_bee, new Vector2(0, 0), this);
@@ -133,11 +176,17 @@ namespace Assembee.Game {
             }
         }
 
+        /// <summary>
+        /// Starts a new fresh game
+        /// </summary>
         public void NewGame() {
             StartGame(true);
             Game1.gameState = Game1.GameState.InGame;
         }
 
+        /// <summary>
+        /// Loads a game from an existing file
+        /// </summary>
         public void LoadGame() {
             StartGame(false);
             if (!SaveManager.Load(this)) {
