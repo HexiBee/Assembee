@@ -14,8 +14,6 @@ using System.Security.AccessControl;
 
 namespace Assembee.Game {
 
-
-
     public class SaveData {
         public List<Tile> tiles { get; set; }
         public List<Bee> bees { get; set; }
@@ -30,9 +28,6 @@ namespace Assembee.Game {
     }
 
     class SaveManager {
-
-
-
         private static string fileName = "save.bee";
 
         public SaveData saveData;
@@ -63,7 +58,7 @@ namespace Assembee.Game {
 
 
         public static SaveData GetSaveData(World world) {
-            return new SaveData(world.bees, world.tileList);
+            return new SaveData(world.Bees, world.TileList);
         }
 
 
@@ -85,11 +80,13 @@ namespace Assembee.Game {
 
         private static void LoadData(SaveData saveData, World world) {
             foreach (Tile t in saveData.tiles) {
+                t.world = world;
                 world.Add(t);
 
             }
            
-            foreach (Bee b in saveData.bees) { 
+            foreach (Bee b in saveData.bees) {
+                b.world = world;
                 world.Add(b);
             }
 

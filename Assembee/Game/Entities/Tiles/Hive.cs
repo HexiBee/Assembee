@@ -7,32 +7,19 @@ using System.Text;
 namespace Assembee.Game.Entities.Tiles {
     public class Hive : Tile {
 
+        public int honeyAmt = 0;
+        public int waxAmt = 0;
+        public int moveTime = 5;
 
-        public int honeyAmt = 0, waxAmt = 0, moveTime = 5;
         private int tick = 0;
         
         public Hive(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
-            
         }
-
-        //public override void Update(GameTime gameTime) {
-        //    //Util.Log("!!");
-        //    if (world.selectedTile == this) {
-        //        if (beeInside != null) {
-
-        //            world.activeBee = beeInside;
-        //        }
-
-        //    }
-        //}
 
         public override void Update(GameTime gameTime) {
             if (beeInside != null) {
                 tick++;
                 DepositResources();
-                
-
-                //DepositResources();
             }
         }
 

@@ -6,41 +6,28 @@ using System.Text;
 
 namespace Assembee.Game.Entities {
     public class Bee : Actor {
-        //Texture2D sBee;
 
-        public const int NECTAR_LIMIT = 100, HONEY_LIMIT = 20, WAX_LIMIT = 3;
+        public const int NECTAR_LIMIT = 100;
+        public const int HONEY_LIMIT = 20;
+        public const int WAX_LIMIT = 3;
 
-        public int nectarAmt = 0, honeyAmt = 0, waxAmt = 0;
+        public int nectarAmt = 0;
+        public int honeyAmt = 0;
+        public int waxAmt = 0;
 
         private Tile target;
         private Tile start;
         private float t;
-        private int tick = 0, init = 0;
-
-
+        private int init = 0;
 
         public Bee(ContentRegistry.spr textureSpr, Vector2 pos, World world) : base(textureSpr, pos, world) {
-            //this.world = Game1.world;
-            //Util.Log("p: " + Game1.world.GetTile(new Vector2(0, 0)).ToString());
-
-            //Util.Log("Pos: " + this.position.ToString());
-            //Util.Log(Input.hexRound(this.position).ToString());
-            start = Game1.world.GetTile(position);
-            if (start != null) {
-                position = start.position;
-                start.beeInside = this;
-            } else {
-                Util.Log("BEE: NULL TILE");
-            }
-            
         }
         
-
         public void SetTarget(Tile target) {
             if (start == null) {
-                start = Game1.world.GetTile(this.position);
+                start = world.GetTile(this.position);
             }
-            foreach (Bee bee in world.bees.ToArray()) {
+            foreach (Bee bee in world.Bees.ToArray()) {
                 if (bee == this) continue;
                 if (bee.target == target) return;
             }
@@ -56,23 +43,16 @@ namespace Assembee.Game.Entities {
         public override void Update(GameTime gameTime) {
 
             // THIS STUFF DIDNT WANT TO WORK IN THE CONSTRUCTOR BECAUSE OF LOADING
-            if (init == 0) { 
+            if (init == 0) {
                 Tile s = world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3))));
-            //if (s != null) {
                 Util.Log("bee tile: " + world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3)))).ToString());
                 start = world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3))));
                 position = start.position;
                 start.beeInside = this;
-                //} else {
-                //Util.Log("??");
                 init++;
             }
             
-
-            
-
             if (target != null) {
-
                 position = Vector2.Lerp(start.position, target.position, t);
                 t += 4.0f / Vector2.Distance(start.position, target.position);
 
@@ -82,11 +62,9 @@ namespace Assembee.Game.Entities {
                     target.beeInside = this;
                     start = target;
                     target = null;
-                    world.audio.StopSound(Audio.sfx.bee);
+                    world.GameAudio.StopSound(Audio.sfx.bee);
                 }
             }
-
-            //tick++;
         }
     }
 }

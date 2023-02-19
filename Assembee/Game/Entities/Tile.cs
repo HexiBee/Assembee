@@ -23,17 +23,18 @@ namespace Assembee.Game.Entities {
     
 
         public override void Update(GameTime gameTime) {
-
         }
 
         public virtual string GetInfoString() {
             return "";
         }
+
         public virtual bool BuildingReqs(out int honeyRequired, out int waxRequired) {
             honeyRequired = 0;
             waxRequired = 0;
             return false;
         }
+
         //public static void BuildUI(SpriteBatch spriteBatch, World world) {
         //    Vector2 orig = new Vector2(0, Game1.ScreenHeight - 250);
         //    spriteBatch.DrawString(Game1.font1, "Build Honey Factory:", orig, Color.Black);

@@ -83,8 +83,8 @@ namespace Assembee.Game.Entities {
                 buildPanel.active = false;
             }
             if (world != null) {
-                if (!(world.selectedTile is null)) {
-                    string tileString = world.selectedTile.GetInfoString();
+                if (!(world.SelectedTile is null)) {
+                    string tileString = world.SelectedTile.GetInfoString();
                     tileText.SetString(tileString);
                     tilePanel.FitToChildren(10.0f);
                     tilePanel.active = true;
@@ -92,11 +92,11 @@ namespace Assembee.Game.Entities {
                     tilePanel.active = false;
                 }
 
-                if (world.selectedBee != null) {
+                if (world.SelectedBee != null) {
                     string beeString = "Bee:" +
-                        "\nNectar: " + ((int)world.selectedBee.nectarAmt).ToString() + " / " + Bee.NECTAR_LIMIT.ToString() +
-                        "\nHoney: " + ((int)world.selectedBee.honeyAmt).ToString() + " / " + Bee.HONEY_LIMIT.ToString() +
-                        "\nWax: " + ((int)world.selectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString();
+                        "\nNectar: " + ((int)world.SelectedBee.nectarAmt).ToString() + " / " + Bee.NECTAR_LIMIT.ToString() +
+                        "\nHoney: " + ((int)world.SelectedBee.honeyAmt).ToString() + " / " + Bee.HONEY_LIMIT.ToString() +
+                        "\nWax: " + ((int)world.SelectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString();
 
                     beeText.SetString(beeString);
                     beePanel.FitToChildren(10.0f);

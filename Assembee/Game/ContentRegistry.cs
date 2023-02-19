@@ -9,8 +9,7 @@ namespace Assembee.Game {
     public static class ContentRegistry {
 
 
-        public enum spr
-        {
+        public enum spr {
             a_bee,
 
             r_honey_small,

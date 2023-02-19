@@ -8,25 +8,52 @@ namespace Assembee.Game {
 
     public class Camera {
 
+        private const float SPD_MOVE = 0.1f;
+        private const float SPD_MOVE_MOUSE = 0.7f;
+
+        public float moveSpeed = 0.0f;
+        public float baseMoveSpeed = 0.0f;
+        public Vector2 mPosStart;
+        public Vector2 mOffset;
+        public Vector2 position = new Vector2(0, 0);
+
         public static Vector2 pos1;
         public Matrix Transform;
         public Matrix Scale;
         public float scale = 1f;
         public Vector2 approach = new Vector2(0, 0);
-        public const float SPD_MOVE = 0.1f, SPD_MOVE_MOUSE = 0.7f;
         public float scaleLerp;
 
         public float spdMove = 0.1f, spdScale = 0.1f;
-        
-        public CameraPos target;
 
-        public Camera(CameraPos target) {
-            this.target = target;
-
+        public Camera() {
         }
 
-        public void Follow() {
-            if (target == null) return;
+        public void Update() {
+
+            if (Input.MouseHold(0)) {
+                mOffset = (mPosStart - Input.getMousePos()) * scale;
+                position += mOffset;
+                spdMove = SPD_MOVE_MOUSE;
+            } else {
+                spdMove = SPD_MOVE;
+            }
+
+            if (Input.keyDown(Input.Left)) {
+                position = new Vector2(position.X - moveSpeed, position.Y);
+            }
+            if (Input.keyDown(Input.Right)) {
+                position = new Vector2(position.X + moveSpeed, position.Y);
+            }
+            if (Input.keyDown(Input.Up)) {
+                position = new Vector2(position.X, position.Y - moveSpeed);
+            }
+            if (Input.keyDown(Input.Down)) {
+                position = new Vector2(position.X, position.Y + moveSpeed);
+            }
+
+
+            mPosStart = Input.getMousePos();
 
             // -- scrolling
             if (Input.scrollPressed() != 0) {
@@ -34,7 +61,7 @@ namespace Assembee.Game {
             }
 
             scale = Util.Lerp(scale, scaleLerp, spdScale);
-            target.moveSpeed = target.baseMoveSpeed + scale * 3.0f;
+            moveSpeed = baseMoveSpeed + scale * 3.0f;
 
             if (scale < 1.0f) {
                 scale = 1.0f;
@@ -46,10 +73,10 @@ namespace Assembee.Game {
             // -- end scrolling
 
             // Center on target
-            approach.X = Util.Lerp(approach.X, (-target.position.X), spdMove);
-            approach.Y = Util.Lerp(approach.Y, -target.position.Y, spdMove);
+            approach.X = Util.Lerp(approach.X, -position.X, spdMove);
+            approach.Y = Util.Lerp(approach.Y, -position.Y, spdMove);
             
-            var position = Matrix.CreateTranslation(
+            var positionMatrix = Matrix.CreateTranslation(
               approach.X,
               approach.Y,
               0);
@@ -59,16 +86,12 @@ namespace Assembee.Game {
                 (Game1.windowHandler.windowHeight / 2) / (1/scale),
                 0);
 
-            pos1.X = position.M41;
-            pos1.X = position.M42;
+            pos1.X = positionMatrix.M41;
+            pos1.Y = positionMatrix.M42;
 
-      
-
-            Transform = position * offset;
+            Transform = positionMatrix * offset;
             Scale = Matrix.CreateScale((1/scale));
             Transform = Matrix.Multiply(Transform, Scale);
-            //Transform = 
-
         }
     }
 }

@@ -18,8 +18,8 @@ namespace Assembee.Game.Entities.Tiles
 
             if (!(beeInside is null) && beeInside.honeyAmt < Bee.HONEY_LIMIT) {
 
-                if (tick % honeyOutputTime == 0 && world.hive.honeyAmt > 0) {
-                    world.hive.honeyAmt--;
+                if (tick % honeyOutputTime == 0 && world.MainHive.honeyAmt > 0) {
+                    world.MainHive.honeyAmt--;
                     beeInside.honeyAmt++;
                 }
 
@@ -33,7 +33,7 @@ namespace Assembee.Game.Entities.Tiles
         }
 
         public override string GetInfoString() {
-            return "Honey Output:\nHoney: " + world.hive.honeyAmt.ToString();
+            return "Honey Output:\nHoney: " + world.MainHive.honeyAmt.ToString();
         }
 
     }

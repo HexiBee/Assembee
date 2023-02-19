@@ -10,23 +10,23 @@ using Microsoft.Xna.Framework.Input.Touch;
 namespace Assembee.Game {
     class Input {
 
-        public static Btn Up = new Btn(Keys.W, Keys.Up, Buttons.LeftThumbstickUp, Buttons.DPadUp);
-        public static Btn Down = new Btn(Keys.S, Keys.Down, Buttons.LeftThumbstickDown, Buttons.DPadDown);
-        public static Btn Left = new Btn(Keys.A, Keys.Left, Buttons.LeftThumbstickLeft, Buttons.DPadLeft);
-        public static Btn Right = new Btn(Keys.D, Keys.Right, Buttons.LeftThumbstickRight, Buttons.DPadRight);
-        public static Btn One = new Btn(Keys.D1);
-        public static Btn Two = new Btn(Keys.D2);
-        public static Btn Three = new Btn(Keys.D3);
-        public static List<Btn> numKeys = new List<Btn>() { One, Two, Three };
+        public static readonly Btn Up = new Btn(Keys.W, Keys.Up, Buttons.LeftThumbstickUp, Buttons.DPadUp);
+        public static readonly Btn Down = new Btn(Keys.S, Keys.Down, Buttons.LeftThumbstickDown, Buttons.DPadDown);
+        public static readonly Btn Left = new Btn(Keys.A, Keys.Left, Buttons.LeftThumbstickLeft, Buttons.DPadLeft);
+        public static readonly Btn Right = new Btn(Keys.D, Keys.Right, Buttons.LeftThumbstickRight, Buttons.DPadRight);
+        public static readonly Btn One = new Btn(Keys.D1);
+        public static readonly Btn Two = new Btn(Keys.D2);
+        public static readonly Btn Three = new Btn(Keys.D3);
+        public static readonly List<Btn> numKeys = new List<Btn>() { One, Two, Three };
 
 
         public static Btn Enter = new Btn(Keys.Enter);
         public static Btn Mute = new Btn(Keys.M);
 
         // DEBUG keys
-        public static Btn NewGame = new Btn(Keys.Space);
-        public static Btn LoadGame = new Btn(Keys.Enter);
-        public static Btn SaveGame = new Btn(Keys.J);
+        public static readonly Btn NewGame = new Btn(Keys.Space);
+        public static readonly Btn LoadGame = new Btn(Keys.Enter);
+        public static readonly Btn SaveGame = new Btn(Keys.J);
 
 
         static KeyboardState currentKeyState;

@@ -2,6 +2,7 @@
 using Assembee.Game.Entities.Tiles;
 using Assembee.Game.GameMath;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,55 +13,64 @@ namespace Assembee.Game {
     /// </summary>
     public class World {
 
-        public const int WORLD_GRID_SIZE = 100;
+        private const int WORLD_GRID_SIZE = 100;
 
-        public List<Entity> entities = new List<Entity>();
-        public List<Actor> actors = new List<Actor>();
-        public List<Tile> background = new List<Tile>();
-        public Tile selectedTile;
+        public List<Entity> Entities { get; private set; }
+        public List<Actor> Actors { get; private set; }
+        public List<Tile> Background { get; private set; }
+        public Tile SelectedTile { get; private set; }
 
         public Tile Selector;
 
-        public Camera camera;
-        public Audio audio;
-        public Hive hive;
+        public Camera MainCamera { get; private set; }
+        public Audio GameAudio { get; private set; }
+        public Hive MainHive { get; private set; }
 
-        public Bee selectedBee = null;
-        public List<Bee> bees = new List<Bee>();
+        public Bee SelectedBee { get; private set; } = null;
+        public List<Bee> Bees { get; private set; } = new List<Bee>();
 
-        private Tile[,] tiles = new Tile[WORLD_GRID_SIZE * 2,WORLD_GRID_SIZE * 2];
-        public List<Tile> tileList = new List<Tile>(); // This will make saving/loading easier, it won't be used other than for that
+        public List<Tile> TileList { get; private set; } // This will make saving/loading easier, it won't be used other than for that
 
-        public World() {
+        private readonly Tile[,] tiles;
+
+        public World(Camera camera) {
+            MainCamera = camera;
+            Entities = new List<Entity>();
+            Actors = new List<Actor>();
+            Background = new List<Tile>();
+            TileList = new List<Tile>();
+
+            tiles = new Tile[WORLD_GRID_SIZE * 2, WORLD_GRID_SIZE * 2];
         }
 
         /// <summary>
         /// Adds a bee to the world.
         /// </summary>
         public void Add(Bee bee) {
-            actors.Add(bee);
-            bees.Add(bee);
+            Actors.Add(bee);
+            Bees.Add(bee);
         }
 
         /// <summary>
         /// Adds an actor to the world.
         /// </summary>
         public void Add(Actor actor) {
-            actors.Add(actor);
+            Actors.Add(actor);
         }
 
         /// <summary>
         /// Adds or replaces a tile in the world.
         /// </summary>
         public void Add(Tile tile) {
-            Tile tOld = GetTile(tile.gridPos);
-            if (tOld != null) {
-                Remove(tOld);
+            Tile oldTile = GetTile(tile.gridPos);
+            if (oldTile != null) {
+                Remove(oldTile);
             }
+            
             tiles[(int)tile.gridPos.X + WORLD_GRID_SIZE, (int)tile.gridPos.Y + WORLD_GRID_SIZE] = tile;
-            tileList.Add(tile);
+            TileList.Add(tile);
             if (tile.GetType() == typeof(Hive)) {
-                hive = (Hive)tile;
+                MainHive = (Hive)tile;
             }
         }
 
@@ -68,32 +78,34 @@ namespace Assembee.Game {
         /// Adds a background tile to the world.
         /// </summary>
         public void AddBackground(Tile tile) {
-            background.Add(tile);
+            Background.Add(tile);
         }
 
         /// <summary>
         /// Adds an entity into the world.
-        /// </summary>\
+        /// </summary>
         public void Add(Entity entity) {
-            entities.Add(entity);
+            Entities.Add(entity);
         }
 
         /// <summary>
-        /// Gets a tile from a given grid position.
+        /// Gets a tile from a given grid position. Null if no tile.
         /// </summary>
-        /// <param name="gridPos">The grid position from where to retrieve the tile</param>
-        /// <returns>The tile at gridPos</returns>
+        /// <param name="gridPos"></param>
+        /// <returns></returns>
         public Tile GetTile(Vector2 gridPos) {
-            if (!InBounds(gridPos)) return null;
-            return tiles[(int)gridPos.X + WORLD_GRID_SIZE, (int)gridPos.Y + WORLD_GRID_SIZE];
+            return GetTile((int)gridPos.X, (int)gridPos.Y);
         }
 
         /// <summary>
-        /// Do not use this.
+        /// Gets a tile from the world a given x and y. Null if no tile.
         /// </summary>
-        private void SetTile(Vector2 gridPos, Tile tile) {
-            if (!InBounds(gridPos)) return;
-            tiles[(int)gridPos.X + WORLD_GRID_SIZE, (int)gridPos.Y + WORLD_GRID_SIZE] = tile;
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Tile GetTile(int x, int y) {
+            if (!InBounds(x, y)) return null;
+            return tiles[x + WORLD_GRID_SIZE, y + WORLD_GRID_SIZE];
         }
 
         /// <summary>
@@ -107,7 +119,11 @@ namespace Assembee.Game {
         /// Whether or not the gridPos is within the world.
         /// </summary>
         private bool InBounds(Vector2 gridPos) {
-            return (gridPos.X < WORLD_GRID_SIZE && gridPos.X > -WORLD_GRID_SIZE && gridPos.Y < WORLD_GRID_SIZE && gridPos.Y > -WORLD_GRID_SIZE);
+            return (gridPos.X <= WORLD_GRID_SIZE && gridPos.X > -WORLD_GRID_SIZE && gridPos.Y <= WORLD_GRID_SIZE && gridPos.Y > -WORLD_GRID_SIZE);
+        }
+
+        private bool InBounds(int x, int y) {
+            return x <= WORLD_GRID_SIZE && x > -WORLD_GRID_SIZE && y <= WORLD_GRID_SIZE && y > -WORLD_GRID_SIZE;
         }
 
         /// <summary>
@@ -124,10 +140,9 @@ namespace Assembee.Game {
         /// </summary>
         /// <param name="freshStart">Whether or not to load from a save file.</param>
         public void StartGame(bool freshStart) {
-
-            for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
-                    this.AddBackground(new Tile(ContentRegistry.spr.t_grass_0, new Vector2(x, y), this));
+            for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
+                for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
+                    AddBackground(new Tile(ContentRegistry.spr.t_grass_0, new Vector2(x, y), this));
                 }
             }
 
@@ -135,13 +150,10 @@ namespace Assembee.Game {
                 GenerateWorld();
             }
 
-            camera.scaleLerp = camera.scale;
-
-
             if (!Game1.audio.noAudio) {
                 Game1.audio.StartSong();
             }
-            audio = Game1.audio;
+            GameAudio = Game1.audio;
 
         }
 
@@ -165,8 +177,8 @@ namespace Assembee.Game {
             Add(new Apartment(ContentRegistry.spr.t_apartments, new Vector2(1, -1), this));
 
             Random rand = new Random();
-            for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
+            for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
+                for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
                     if (rand.NextDouble() < 0.05 && GetTile(new Vector2(x, y)) is null) {
                         Random r = new Random();
                         int amt = r.Next(300, 650);
@@ -193,6 +205,73 @@ namespace Assembee.Game {
                 GenerateWorld();
             }
             Game1.gameState = Game1.GameState.InGame;
+        }
+
+        public void SelectTile(Tile tile) {
+
+            if (tile == null) {
+                Selector = null;
+                SelectedBee = null;
+                SelectedTile = null;
+                return;
+            }
+
+            SelectedTile = tile;
+            Selector = new Selector(ContentRegistry.spr.entity_selector, Input.getMouseHexTile(MainCamera), this);
+
+            if (tile.beeInside != null) {
+                SelectedBee = tile.beeInside;
+
+            } else if (SelectedBee != null) {
+                SelectedBee.SetTarget(tile);
+                Game1.audio.PlaySound(Audio.sfx.bee, 1f, 0f);
+                SelectedBee = null;
+
+            } else {
+                SelectedBee = null;
+            }
+
+            Game1.audio.StopSound(Audio.sfx.click);
+            Game1.audio.PlaySound(Audio.sfx.click, 0.6f, -0.41f);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, int animationTick) {
+            foreach (Tile backgroundTile in Background) {
+                backgroundTile.Draw(spriteBatch, animationTick);
+            }
+
+            Selector?.Draw(spriteBatch, animationTick);
+
+            for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
+                for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
+                     GetTile(x, y)?.Draw(spriteBatch, animationTick);
+                }
+            }
+
+            foreach (Actor actor in Actors) {
+                actor.Draw(spriteBatch, animationTick);
+            }
+
+            foreach (Entity entity in Entities) {
+                entity.Draw(spriteBatch, animationTick);
+            }
+
+        }
+
+        public void Update(GameTime gameTime) {
+            foreach (Entity entity in Entities) {
+                entity.Update(gameTime);
+            }
+
+            foreach (Actor actor in Actors) {
+                actor.Update(gameTime);
+            }
+
+            for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
+                for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
+                    GetTile(x, y)?.Update(gameTime);
+                }
+            }
         }
 
     }

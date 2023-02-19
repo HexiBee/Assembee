@@ -13,8 +13,8 @@ namespace Assembee.Game.Entities.Tiles {
         public static string BuildUI(World world, int HONEY_NEEDED, int WAX_NEEDED, string NAME) {
             string uiString = "";
             uiString += "Build " + NAME + ":";
-            uiString += "\nHoney Needed: " + world.hive.honeyAmt.ToString() + " / " + HONEY_NEEDED.ToString();
-            uiString += "\nWax Needed: " + world.hive.waxAmt.ToString() + " / " + WAX_NEEDED.ToString();
+            uiString += "\nHoney Needed: " + world.MainHive.honeyAmt.ToString() + " / " + HONEY_NEEDED.ToString();
+            uiString += "\nWax Needed: " + world.MainHive.waxAmt.ToString() + " / " + WAX_NEEDED.ToString();
             return uiString;
         }
     }

@@ -47,8 +47,12 @@ namespace Assembee.Game {
             graphicsManager.PreferredBackBufferWidth = windowWidth;
             graphicsManager.PreferredBackBufferHeight = windowHeight;
 
-            //game.Window.AllowUserResizing = true;
-            //game.Window.ClientSizeChanged += OnResize;
+            // This code doesn't work with fullscreen
+
+            /*
+            game.Window.AllowUserResizing = true;
+            game.Window.ClientSizeChanged += OnResize;
+            */
             graphicsManager.ApplyChanges();
 
             spriteBatch = new SpriteBatch(game.GraphicsDevice);
@@ -58,35 +62,9 @@ namespace Assembee.Game {
             game.GraphicsDevice.SetRenderTarget(renderTarget);
             game.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: world.camera.Transform);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: world.MainCamera.Transform);
 
-            if (world != null) {
-
-                foreach (Tile backgroundTile in world.background.ToArray()) {
-                    backgroundTile.Draw(spriteBatch, animTick);
-                }
-
-                if (world.Selector != null) {
-                    world.Selector.Draw(spriteBatch, animTick);
-                }
-
-                Tile tile;
-                for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                    for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
-                        tile = world.GetTile(new Vector2(x, y));
-                        if (!(tile is null)) {
-                            tile.Draw(spriteBatch, animTick);
-                        }
-                    }
-                }
-                foreach (Actor actor in world.actors.ToArray()) {
-                    actor.Draw(spriteBatch, animTick);
-                }
-                foreach (Entity entity in world.entities.ToArray()) {
-                    entity.Draw(spriteBatch, animTick);
-                }
-
-            }
+            world?.Draw(spriteBatch, animTick);
 
             animTick++;
 
@@ -134,7 +112,6 @@ namespace Assembee.Game {
         }
 
         public void Resolution(int w, int h, bool fullscreen) {
-            Util.Log(fullscreen.ToString());
             renderTarget = new RenderTarget2D(game.GraphicsDevice, w, h);
             graphicsManager.PreferredBackBufferWidth = w;
             graphicsManager.PreferredBackBufferHeight = h;

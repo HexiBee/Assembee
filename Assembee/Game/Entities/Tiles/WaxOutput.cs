@@ -18,8 +18,8 @@ namespace Assembee.Game.Entities.Tiles
 
             if (!(beeInside is null) && beeInside.waxAmt < Bee.WAX_LIMIT) {
 
-                if (tick % waxOutputTime == 0 && world.hive.waxAmt > 0) {
-                    world.hive.waxAmt--;
+                if (tick % waxOutputTime == 0 && world.MainHive.waxAmt > 0) {
+                    world.MainHive.waxAmt--;
                     beeInside.waxAmt++;
                 }
 
@@ -33,7 +33,7 @@ namespace Assembee.Game.Entities.Tiles
         }
 
         public override string GetInfoString() {
-            return "Wax Output:\nWax: " + world.hive.waxAmt.ToString();
+            return "Wax Output:\nWax: " + world.MainHive.waxAmt.ToString();
         }
 
     }

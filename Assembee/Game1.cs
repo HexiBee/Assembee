@@ -12,10 +12,11 @@ using System.Collections.Generic;
 namespace Assembee {
     public class Game1 : Microsoft.Xna.Framework.Game {
 
-        public static World world = new World();
         public static WindowHandler windowHandler;
 
-        CameraPos cPos;
+        public Camera camera;
+        public World world;
+
         public static Audio audio;
         public static SpriteFont font1;
 
@@ -28,8 +29,6 @@ namespace Assembee {
 
         Building selectedBuilding = Building.None;
 
-        Camera camera;
-
         public enum GameState {
             TitleScreen,
             InGame,
@@ -39,8 +38,12 @@ namespace Assembee {
 
         public Game1() {
             Content.RootDirectory = "Content";
-            windowHandler = new WindowHandler(this, world);
             IsMouseVisible = true;
+
+            this.camera = new Camera();
+            this.world = new World(camera);
+
+            windowHandler = new WindowHandler(this, world);
         }
 
         protected override void Initialize() {
@@ -67,15 +70,9 @@ namespace Assembee {
             } catch (Microsoft.Xna.Framework.Audio.NoAudioHardwareException) {
                 audio.noAudio = true;
             }
-            cPos = new CameraPos(ContentRegistry.spr.a_bee, new Vector2(0, 0), world);
-            world.Add(cPos);
-            camera = new Camera(cPos);
-            world.camera = camera;
+            
 
             HUD.InitHUD(world);
-
-            //StartGame();
-
         }
 
 
@@ -121,9 +118,7 @@ namespace Assembee {
                         audio.ToggleMute();
                     }
 
-                    if (camera != null)
-                        camera.Follow();
-
+                    camera.Update();
 
                     // Tile conditions
                     if (Input.Click(0) && !HUD.OverActiveElement(Input.getMousePos().ToPoint())) {
@@ -132,33 +127,7 @@ namespace Assembee {
                         // Deselect a building when left click
                         selectedBuilding = Building.None;
 
-                        if (tileClicked != null) {
-                            world.Selector = new Selector(ContentRegistry.spr.entity_selector, Input.getMouseHexTile(camera), world);
-
-
-                            if (world.selectedBee != null) {
-
-                                if (world.selectedTile != tileClicked) {
-                                    audio.PlaySound(Audio.sfx.bee, 1f, 0f);
-                                }
-                                world.selectedBee.SetTarget(tileClicked);
-
-                                world.selectedBee = null;
-
-                            }
-                            world.selectedTile = tileClicked;
-                            audio.StopSound(Audio.sfx.click);
-                            audio.PlaySound(Audio.sfx.click, 0.6f, -0.41f);
-                        } else {
-                            world.Selector = null;
-                            world.selectedBee = null;
-                            world.selectedTile = null;
-                        }
-
-                    }
-
-                    if (world.selectedTile != null) {
-                        world.selectedBee = world.selectedTile.beeInside;
+                        world.SelectTile(tileClicked);
                     }
 
                     if (Input.Click(1) && world.GetTile(Input.getMouseHexTile(camera)) is null && !HUD.OverActiveElement(Input.getMousePos().ToPoint())) {
@@ -182,21 +151,17 @@ namespace Assembee {
                         }
                         int honey, wax;
                         if (newTile.BuildingReqs(out honey, out wax)) {
-                            if (world.hive.honeyAmt >= honey && world.hive.waxAmt >= wax) {
-                                world.hive.honeyAmt -= honey;
-                                world.hive.waxAmt -= wax;
+                            if (world.MainHive.honeyAmt >= honey && world.MainHive.waxAmt >= wax) {
+                                world.MainHive.honeyAmt -= honey;
+                                world.MainHive.waxAmt -= wax;
                                 world.Add(newTile);
                                 audio.PlaySound(Audio.sfx.place, 1f, 0f);
                                 if (selectedBuilding == Building.Apartment) {
-                                    world.Add(new Bee(ContentRegistry.spr.a_bee, Input.getMouseHexTile(camera), world));
+                                    world.Add(new Bee(ContentRegistry.spr.a_bee, newTile.position, world));
                                 }
                             }
                         }
-
                     }
-
-
-                    
 
                     for (int i = 0; i < Input.numKeys.Count; i++) {
                         if (Input.keyPressed(Input.numKeys[i])) {
@@ -208,30 +173,7 @@ namespace Assembee {
                         }
                     }
 
-
-                    
-
-                    // Updates all entities in the world
-                    if (world != null) {
-                        foreach (Entity entity in world.entities.ToArray()) {
-                            entity.Update(gameTime);
-                        }
-                        foreach (Actor actor in world.actors.ToArray()) {
-                            actor.Update(gameTime);
-                        }
-
-                        Tile tile;
-                        for (int x = -World.WORLD_GRID_SIZE; x < World.WORLD_GRID_SIZE; x++) {
-                            for (int y = -World.WORLD_GRID_SIZE; y < World.WORLD_GRID_SIZE; y++) {
-                                tile = world.GetTile(new Vector2(x, y));
-                                if (!(tile is null)) {
-                                    tile.Update(gameTime);
-
-                                }
-                            }
-                        }
-                    }
-
+                    world?.Update(gameTime);
 
                     break;
             }
