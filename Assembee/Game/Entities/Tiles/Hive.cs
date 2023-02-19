@@ -40,7 +40,5 @@ namespace Assembee.Game.Entities.Tiles {
             return "Hive:\nHoney: " + honeyAmt.ToString() + "\nWax: " + waxAmt.ToString();
         }
 
-
-
     }
 }

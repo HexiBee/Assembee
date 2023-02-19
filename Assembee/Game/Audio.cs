@@ -10,9 +10,11 @@ namespace Assembee.Game {
         public bool noAudio = false;
         public bool muted = false;
         public static List<SoundEffect> soundEffects;
-        public static List<SoundEffectInstance> sfxI;
+        public static List<SoundEffectInstance> soundEffectInstances;
         public float volumeMusic = 0.1f;
         public float volumeSfx = 1f;
+
+        private static List<int> soundEffectInstanceCounts;
 
         public enum sfx {
             click,
@@ -31,12 +33,15 @@ namespace Assembee.Game {
                     content.Load<SoundEffect>("sfx_bee"),
                 };
 
-                sfxI = new List<SoundEffectInstance>() {
+                soundEffectInstances = new List<SoundEffectInstance>() {
                     soundEffects[0].CreateInstance(),
                     soundEffects[1].CreateInstance(),
                     soundEffects[2].CreateInstance(),
                 };
-                
+
+                soundEffectInstanceCounts = new List<int> {
+                    0, 0, 0
+                };
 
                 song = content.Load<Song>("beeming");
                 //PlaySound(sfx.title, 1f, 0f, noAudio);
@@ -58,16 +63,22 @@ namespace Assembee.Game {
 
         public void PlaySound(sfx sound, float vol, float pitch) {
             if (!noAudio) {
-                sfxI[(int)sound].Volume = vol;
-                sfxI[(int)sound].Pitch = pitch;
+                soundEffectInstances[(int)sound].Volume = vol;
+                soundEffectInstances[(int)sound].Pitch = pitch;
 
-                sfxI[(int)sound].Play();
+                if (soundEffectInstanceCounts[(int)sound] == 0)
+                    soundEffectInstances[(int)sound].Play();
+
+                soundEffectInstanceCounts[(int)sound]++;
             }
         }
 
         public void StopSound(sfx sound) {
             if (!noAudio) {
-                sfxI[(int)sound].Stop();
+                soundEffectInstanceCounts[(int)sound]--;
+
+                if (soundEffectInstanceCounts[(int)sound] == 0)
+                    soundEffectInstances[(int)sound].Stop();
             }
         }
 
