@@ -15,7 +15,6 @@ namespace Assembee.Game {
 
         private const int WORLD_GRID_SIZE = 100;
 
-        public List<Entity> Entities { get; private set; }
         public List<Actor> Actors { get; private set; }
         public List<Tile> Background { get; private set; }
         public Tile SelectedTile { get; private set; }
@@ -35,7 +34,6 @@ namespace Assembee.Game {
 
         public World(Camera camera) {
             MainCamera = camera;
-            Entities = new List<Entity>();
             Actors = new List<Actor>();
             Background = new List<Tile>();
             TileList = new List<Tile>();
@@ -79,13 +77,6 @@ namespace Assembee.Game {
         /// </summary>
         public void AddBackground(Tile tile) {
             Background.Add(tile);
-        }
-
-        /// <summary>
-        /// Adds an entity into the world.
-        /// </summary>
-        public void Add(Entity entity) {
-            Entities.Add(entity);
         }
 
         /// <summary>
@@ -140,9 +131,16 @@ namespace Assembee.Game {
         /// </summary>
         /// <param name="freshStart">Whether or not to load from a save file.</param>
         public void StartGame(bool freshStart) {
+            Random random = new Random();
+            ContentRegistry.spr[] grass_sprites = {
+                ContentRegistry.spr.t_grass_0,
+                ContentRegistry.spr.t_grass_1,
+                ContentRegistry.spr.t_grass_2,
+            };
+
             for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
                 for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
-                    AddBackground(new Tile(ContentRegistry.spr.t_grass_0, new Vector2(x, y), this));
+                    AddBackground(new Tile(grass_sprites[random.Next(grass_sprites.Length)], new Vector2(x, y), this));
                 }
             }
 
@@ -165,7 +163,6 @@ namespace Assembee.Game {
             Add(bee);
             hive.beeInside = bee;
             Add(hive);
-
 
             Add(new HoneyOutput(ContentRegistry.spr.t_helipad_honey, new Vector2(0, 1), this));
             Add(new WaxOutput(ContentRegistry.spr.t_helipad_wax, new Vector2(-1, 1), this));
@@ -205,6 +202,10 @@ namespace Assembee.Game {
             Game1.gameState = Game1.GameState.InGame;
         }
 
+        /// <summary>
+        /// Sets a tile as the user selected tile.
+        /// </summary>
+        /// <param name="tile"></param>
         public void SelectTile(Tile tile) {
 
             if (tile == null) {
@@ -234,37 +235,41 @@ namespace Assembee.Game {
         }
 
         public void Draw(SpriteBatch spriteBatch, int animationTick) {
+            /* Draw every background tile. */
             foreach (Tile backgroundTile in Background) {
-                backgroundTile.Draw(spriteBatch, animationTick);
+                if (MainCamera.InBounds(backgroundTile.position))
+                    backgroundTile.Draw(spriteBatch, animationTick);
             }
 
+            /* Draw the selector */
             Selector?.Draw(spriteBatch, animationTick);
 
+            /* Draw every tile */
+            Tile selectedTile;
             for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
                 for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
-                     GetTile(x, y)?.Draw(spriteBatch, animationTick);
+                    selectedTile = GetTile(x, y);
+                    if (selectedTile != null && MainCamera.InBounds(selectedTile.position)) {
+                        GetTile(x, y).Draw(spriteBatch, animationTick);
+                    }
                 }
             }
 
+            /* Draw all actors */
             foreach (Actor actor in Actors) {
-                actor.Draw(spriteBatch, animationTick);
-            }
-
-            foreach (Entity entity in Entities) {
-                entity.Draw(spriteBatch, animationTick);
+                if (MainCamera.InBounds(actor.position))
+                    actor.Draw(spriteBatch, animationTick);
             }
 
         }
 
         public void Update(GameTime gameTime) {
-            foreach (Entity entity in Entities) {
-                entity.Update(gameTime);
-            }
-
+            /* Update actors */
             foreach (Actor actor in Actors) {
                 actor.Update(gameTime);
             }
 
+            /* Update tiles */
             for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
                 for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
                     GetTile(x, y)?.Update(gameTime);

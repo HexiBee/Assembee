@@ -130,30 +130,15 @@ namespace Assembee.Game {
             return previousButtonState.IsButtonDown(button) && !currentButtonState.IsButtonDown(button);
         }
 
-
-
         // Returns the mouse's position 
         public static Vector2 getMousePos() {
             return new Vector2(currentMouseState.X, currentMouseState.Y);
         }
 
-
-
-        // These were used to get the coordinate of the (square) grid being hovered over
-        
-        public static Vector2 getMousePosScreen() {
-            Vector2 mousePos;
-            mousePos.X = Input.getMousePos().X; // (Game1.ScreenWidth / Game1.SCREEN_WIDTH);
-            mousePos.Y = Input.getMousePos().Y; // (Game1.ScreenHeight / Game1.SCREEN_HEIGHT);
-            return mousePos;
-        }
-
         public static Vector2 getMouseTile(Camera camera) {
-            Vector2 mousePos = getMousePosScreen();
-            float mX = (mousePos.X - Game1.windowHandler.windowWidth / 2) * camera.scale - camera.approach.X;
-            //mX -= mX % Game1.GridSize;
-            float mY = (mousePos.Y - Game1.windowHandler.windowHeight / 2) * camera.scale - camera.approach.Y; //mousePos.Y - (camera.approach.Y);
-            //mY -= mY % Game1.GridSize;
+            Vector2 mousePos = getMousePos();
+            float mX = (mousePos.X - Game1.windowHandler.windowWidth / 2) * camera.Scale - camera.Position.X;
+            float mY = (mousePos.Y - Game1.windowHandler.windowHeight / 2) * camera.Scale - camera.Position.Y; 
             return new Vector2((int)mX, (int)mY);
         }
 

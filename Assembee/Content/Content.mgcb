@@ -139,7 +139,7 @@
 /processorParam:TextureFormat=Color
 /build:../../Assets/Sprites/tile_flowers.png;tile_flowers
 
-#begin ../../Assets/Sprites/tile_grass.png
+#begin ../../Assets/Sprites/tile_grass_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -149,7 +149,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../Assets/Sprites/tile_grass.png;tile_grass
+/build:../../Assets/Sprites/tile_grass_0.png;tile_grass_0
+
+#begin ../../Assets/Sprites/tile_grass_1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../Assets/Sprites/tile_grass_1.png;tile_grass_1
+
+#begin ../../Assets/Sprites/tile_grass_2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../Assets/Sprites/tile_grass_2.png;tile_grass_2
 
 #begin ../../Assets/Sprites/tile_helipad_honey.png
 /importer:TextureImporter

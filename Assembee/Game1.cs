@@ -71,13 +71,8 @@ namespace Assembee {
                 audio.AudioDisabled = true;
             }
             
-
             HUD.InitHUD(world);
         }
-
-
-
-
 
         protected override void Update(GameTime gameTime) {
             // Check for released

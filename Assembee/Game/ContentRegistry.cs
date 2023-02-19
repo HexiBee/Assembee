@@ -18,6 +18,8 @@ namespace Assembee.Game {
 
             t_apartments,
             t_grass_0,
+            t_grass_1,
+            t_grass_2,
             t_hex,
             t_hive,
             t_honey_producer,
@@ -43,7 +45,9 @@ namespace Assembee.Game {
             TextureRegistry.Add(spr.r_wax_small, content.Load<Texture2D>("resource_wax_small"));
 
             TextureRegistry.Add(spr.t_apartments, content.Load<Texture2D>("tile_apartments"));
-            TextureRegistry.Add(spr.t_grass_0, content.Load<Texture2D>("tile_grass"));
+            TextureRegistry.Add(spr.t_grass_0, content.Load<Texture2D>("tile_grass_0"));
+            TextureRegistry.Add(spr.t_grass_1, content.Load<Texture2D>("tile_grass_1"));
+            TextureRegistry.Add(spr.t_grass_2, content.Load<Texture2D>("tile_grass_2"));
             TextureRegistry.Add(spr.t_hex, content.Load<Texture2D>("tile_hex"));
             TextureRegistry.Add(spr.t_hive, content.Load<Texture2D>("tile_hive"));
             TextureRegistry.Add(spr.t_honey_producer, content.Load<Texture2D>("tile_honey_producer"));

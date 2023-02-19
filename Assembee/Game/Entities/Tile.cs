@@ -7,20 +7,15 @@ using System.Text;
 
 namespace Assembee.Game.Entities {
     public class Tile : Entity {
-        Matrix2 hexMat = new Matrix2((float)Math.Sqrt(3), (float)Math.Sqrt(3) / 2.0f, 0.0f, 3.0f / 2.0f);
-
-        //public static int HONEY_NEEDED = 0;
-        //public static int WAX_NEEDED = 0;
+        private static readonly Matrix2 hexMatrix = new Matrix2((float)Math.Sqrt(3), (float)Math.Sqrt(3) / 2.0f, 0.0f, 3.0f / 2.0f);
 
         public Bee beeInside = null;
         public Vector2 gridPos { get; set; }
 
         public Tile(ContentRegistry.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
             this.gridPos = gridPos;
-            position = hexMat * new Vector2(gridPos.X * 127, gridPos.Y * 127);
+            position = hexMatrix * new Vector2(gridPos.X * 127, gridPos.Y * 127);
         }
-
-    
 
         public override void Update(GameTime gameTime) {
         }
