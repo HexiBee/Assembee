@@ -7,23 +7,23 @@ using System.Text;
 
 namespace Assembee.Game {
     public class Audio {
-        public bool noAudio = false;
-        public bool muted = false;
-        public static List<SoundEffect> soundEffects;
-        public static List<SoundEffectInstance> soundEffectInstances;
-        public float volumeMusic = 0.1f;
-        public float volumeSfx = 1f;
+        public bool AudioDisabled { get; set; } = false;
+        public bool Muted { get; set; } = false;
 
-        private static List<int> soundEffectInstanceCounts;
+        private List<SoundEffect> soundEffects;
+        private List<SoundEffectInstance> soundEffectInstances;
+        private List<int> soundEffectInstanceCounts;
+
+        private float volumeMusic = 0.1f;
+        private float volumeSfx = 1f;
+
+        private Song song;
 
         public enum sfx {
             click,
             place,
             bee
         }
-
-        public Song song;
-        private float volume = 1f;
 
         public Audio(ContentManager content) {
             try {
@@ -44,45 +44,45 @@ namespace Assembee.Game {
                 };
 
                 song = content.Load<Song>("beeming");
-                //PlaySound(sfx.title, 1f, 0f, noAudio);
-                //MediaPlayer.Play(song);
-                //MediaPlayer.IsRepeating = true;
-                MediaPlayer.Volume = 0.1f;
 
+                MediaPlayer.Volume = volumeSfx;
                 MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
             } catch (Microsoft.Xna.Framework.Audio.NoAudioHardwareException) {
-                noAudio = true;
+                AudioDisabled = true;
             }
         }
 
         public void StartSong() {
+            if (AudioDisabled) return;
+
             MediaPlayer.Play(song);
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = volumeMusic;
         }
 
         public void PlaySound(sfx sound, float vol, float pitch) {
-            if (!noAudio) {
-                soundEffectInstances[(int)sound].Volume = vol;
-                soundEffectInstances[(int)sound].Pitch = pitch;
+            if (AudioDisabled) return;
 
-                if (soundEffectInstanceCounts[(int)sound] == 0)
-                    soundEffectInstances[(int)sound].Play();
+            soundEffectInstances[(int)sound].Volume = vol;
+            soundEffectInstances[(int)sound].Pitch = pitch;
 
-                soundEffectInstanceCounts[(int)sound]++;
-            }
+            if (soundEffectInstanceCounts[(int)sound] == 0)
+                soundEffectInstances[(int)sound].Play();
+
+            soundEffectInstanceCounts[(int)sound]++;
         }
 
         public void StopSound(sfx sound) {
-            if (!noAudio) {
-                soundEffectInstanceCounts[(int)sound]--;
+            if (AudioDisabled) return;
 
-                if (soundEffectInstanceCounts[(int)sound] == 0)
-                    soundEffectInstances[(int)sound].Stop();
-            }
+            soundEffectInstanceCounts[(int)sound]--;
+            if (soundEffectInstanceCounts[(int)sound] == 0)
+                soundEffectInstances[(int)sound].Stop();
         }
 
         public void StopMusic() {
+            if (AudioDisabled) return;
+
             MediaPlayer.Stop();
         }
 
@@ -93,15 +93,17 @@ namespace Assembee.Game {
         }
 
         public void ToggleMute() {
-            if (!muted) {
+            if (AudioDisabled) return;
+
+            if (!Muted) {
                 MediaPlayer.Volume = 0f;
                 SoundEffect.MasterVolume = 0f;
-                muted = true;
+                Muted = true;
                 
             } else {
                 MediaPlayer.Volume = volumeMusic;
                 SoundEffect.MasterVolume = volumeSfx;
-                muted = false;
+                Muted = false;
             }
         }
 

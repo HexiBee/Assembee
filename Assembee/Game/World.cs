@@ -150,9 +150,7 @@ namespace Assembee.Game {
                 GenerateWorld();
             }
 
-            if (!Game1.audio.noAudio) {
-                Game1.audio.StartSong();
-            }
+            Game1.audio.StartSong();
             GameAudio = Game1.audio;
 
         }

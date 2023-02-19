@@ -68,7 +68,7 @@ namespace Assembee {
             try {
                 audio.PlaySound(Audio.sfx.click, 0f, 0f);
             } catch (Microsoft.Xna.Framework.Audio.NoAudioHardwareException) {
-                audio.noAudio = true;
+                audio.AudioDisabled = true;
             }
             
 
