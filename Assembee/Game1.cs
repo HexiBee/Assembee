@@ -47,7 +47,6 @@ namespace Assembee {
         }
 
         protected override void Initialize() {
-            // TODO: Add your initialization logic here
             windowHandler.Init();
             base.Initialize();
         }
@@ -59,31 +58,20 @@ namespace Assembee {
             // Sets the initial resolution
             //graphics = new GraphicsDeviceManager(this);
 
-            // TODO: use this.Content to load your game content here
-
             font1 = Content.Load<SpriteFont>("font1");
 
-            // Audio
             audio = new Audio(Content);
-            try {
-                audio.PlaySound(Audio.sfx.click, 0f, 0f);
-            } catch (Microsoft.Xna.Framework.Audio.NoAudioHardwareException) {
-                audio.AudioDisabled = true;
-            }
-            
+
             HUD.InitHUD(world);
         }
 
         protected override void Update(GameTime gameTime) {
-            // Check for released
+            // Check for released bettons and update Input
             Input.GetState();
 
             if (Input.keyPressed(Keys.F)) {
                 windowHandler.ToggleFullscreen();
             }
-
-            //if (Input.Click(0))
-            //     world.Add(new Entity("actor_bee_up" , Input.getMouseTile(world.camera), world));
 
             // Press esc to end the game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -94,20 +82,16 @@ namespace Assembee {
                     break;
 
                 case GameState.InGame:
-                    // debug
                     if (Input.keyPressed(Input.SaveGame)) {
                         SaveManager.Save(world);
                     }
 
                     if (Input.keyPressed(Input.Enter)) {
-                        //SaveManager.Save(world);
+                        SaveManager.Save(world);
                         gameState = GameState.TitleScreen;
                         audio.StopMusic();
-                        world = null;
                         break;
                     }
-
-                    //end debug
 
                     if (Input.keyPressed(Input.Mute)) {
                         audio.ToggleMute();
@@ -149,10 +133,10 @@ namespace Assembee {
                             if (world.MainHive.honeyAmt >= honey && world.MainHive.waxAmt >= wax) {
                                 world.MainHive.honeyAmt -= honey;
                                 world.MainHive.waxAmt -= wax;
-                                world.Add(newTile);
+                                world.AddTile(newTile);
                                 audio.PlaySound(Audio.sfx.place, 1f, 0f);
                                 if (selectedBuilding == Building.Apartment) {
-                                    world.Add(new Bee(ContentRegistry.spr.a_bee, newTile.position, world));
+                                    world.AddBee(new Bee(ContentRegistry.spr.a_bee, newTile.position, world));
                                 }
                             }
                         }

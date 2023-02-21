@@ -58,14 +58,14 @@ namespace Assembee.Game {
 
 
         public static SaveData GetSaveData(World world) {
-            return new SaveData(world.Bees, world.TileList);
+            return new SaveData(world.Bees, world.Tiles);
         }
 
 
 
         public static bool Load(World world) {
             if (!File.Exists(fileName)) {
-                return false; // failure, start new game
+                return false;
             }
             //File.Decrypt(fileName);
             var fileContents = File.ReadAllText(fileName);
@@ -74,20 +74,19 @@ namespace Assembee.Game {
 
             LoadData(readData, world);
 
-
             return true;
         }
 
         private static void LoadData(SaveData saveData, World world) {
             foreach (Tile t in saveData.tiles) {
                 t.world = world;
-                world.Add(t);
+                world.AddTile(t);
 
             }
            
             foreach (Bee b in saveData.bees) {
                 b.world = world;
-                world.Add(b);
+                world.AddBee(b);
             }
 
         }

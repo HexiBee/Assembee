@@ -137,8 +137,8 @@ namespace Assembee.Game {
 
         public static Vector2 getMouseTile(Camera camera) {
             Vector2 mousePos = getMousePos();
-            float mX = (mousePos.X - Game1.windowHandler.windowWidth / 2) * camera.Scale - camera.Position.X;
-            float mY = (mousePos.Y - Game1.windowHandler.windowHeight / 2) * camera.Scale - camera.Position.Y; 
+            float mX = (mousePos.X - Game1.windowHandler.windowWidth / 2) * camera.Scale + camera.Position.X;
+            float mY = (mousePos.Y - Game1.windowHandler.windowHeight / 2) * camera.Scale + camera.Position.Y; 
             return new Vector2((int)mX, (int)mY);
         }
 

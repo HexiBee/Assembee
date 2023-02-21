@@ -8,7 +8,7 @@ using System.Text;
 namespace Assembee.Game {
     public class Audio {
         public bool AudioDisabled { get; set; } = false;
-        public bool Muted { get; set; } = false;
+        public bool Muted { get; private set; } = false;
 
         private List<SoundEffect> soundEffects;
         private List<SoundEffectInstance> soundEffectInstances;
@@ -47,6 +47,10 @@ namespace Assembee.Game {
 
                 MediaPlayer.Volume = volumeSfx;
                 MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
+
+                // Play test sound to see if audio is working
+                PlaySound(sfx.click, 0f, 0f);
+
             } catch (Microsoft.Xna.Framework.Audio.NoAudioHardwareException) {
                 AudioDisabled = true;
             }
@@ -57,7 +61,7 @@ namespace Assembee.Game {
 
             MediaPlayer.Play(song);
             MediaPlayer.IsRepeating = true;
-            MediaPlayer.Volume = volumeMusic;
+            MediaPlayer.Volume = Muted ? 0 : volumeMusic;
         }
 
         public void PlaySound(sfx sound, float vol, float pitch) {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,7 +46,6 @@ namespace Assembee.Game.Entities {
             // THIS STUFF DIDNT WANT TO WORK IN THE CONSTRUCTOR BECAUSE OF LOADING
             if (init == 0) {
                 Tile s = world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3))));
-                Util.Log("bee tile: " + world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3)))).ToString());
                 start = world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3))));
                 position = start.position;
                 start.beeInside = this;
