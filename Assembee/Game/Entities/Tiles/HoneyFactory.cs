@@ -15,13 +15,13 @@ namespace Assembee.Game.Entities.Tiles {
         //public int honeyAmt = 0;//, nectarAmt = 0;
         int tick = 0, nectarProcessTime = 38, nectarProcessed = 0, nectarNeeded = 4;
 
-        public HoneyFactory(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public HoneyFactory(ContentRegistry.spr texture, Vector2 pos) : base(texture, pos) {
 
         }
 
 
-        public override void Update(GameTime gameTime) {
-            if (beeInside != null && beeInside.honeyAmt < Bee.HONEY_LIMIT) {
+        public override void Update(GameTime gameTime, World world) {
+            if (BeeInside != null && BeeInside.honeyAmt < Bee.HONEY_LIMIT) {
                 tick++;
                 GenerateHoney();
             } else {
@@ -30,14 +30,14 @@ namespace Assembee.Game.Entities.Tiles {
         }
         public void GenerateHoney() {
 
-            if (beeInside.nectarAmt > 0) {
+            if (BeeInside.nectarAmt > 0) {
                 pauseAnim = false;
                 if (tick % nectarProcessTime == 0) {
                     nectarProcessed++;
-                    beeInside.nectarAmt--;
+                    BeeInside.nectarAmt--;
                 }
                 if (nectarProcessed >= nectarNeeded) {
-                    beeInside.honeyAmt++;
+                    BeeInside.honeyAmt++;
                     nectarProcessed = 0;
                 }
             } else {

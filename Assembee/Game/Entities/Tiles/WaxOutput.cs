@@ -8,32 +8,34 @@ namespace Assembee.Game.Entities.Tiles
 {
     class WaxOutput : Tile{
 
-        int tick = 0, waxOutputTime = 5;
+        private int tick = 0;
+        private int waxOutputTime = 5;
+        private int availableWax = 0;
 
-        public WaxOutput(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public WaxOutput(ContentRegistry.spr texture, Vector2 pos) : base(texture, pos) {
             
         }
 
-        public override void Update(GameTime gameTime) {
+        public override void Update(GameTime gameTime, World world) {
+            availableWax = world.MainHive.waxAmt;
 
-            if (!(beeInside is null) && beeInside.waxAmt < Bee.WAX_LIMIT) {
+            if (!(BeeInside is null) && BeeInside.waxAmt < Bee.WAX_LIMIT) {
 
                 if (tick % waxOutputTime == 0 && world.MainHive.waxAmt > 0) {
                     world.MainHive.waxAmt--;
-                    beeInside.waxAmt++;
+                    BeeInside.waxAmt++;
                 }
 
                 tick++;
             } else {
                 tick = 0;
             }
-            
 
-            base.Update(gameTime);
+            base.Update(gameTime, world);
         }
 
         public override string GetInfoString() {
-            return "Wax Output:\nWax: " + world.MainHive.waxAmt.ToString();
+            return "Wax Output:\nWax: " + availableWax.ToString();
         }
 
     }

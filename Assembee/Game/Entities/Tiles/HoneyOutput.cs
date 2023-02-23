@@ -8,19 +8,22 @@ namespace Assembee.Game.Entities.Tiles
 {
     class HoneyOutput : Tile{
 
-        int tick = 0, honeyOutputTime = 5;
+        private int tick = 0;
+        private int honeyOutputTime = 5;
+        private int availableHoney = 0;
 
-        public HoneyOutput(ContentRegistry.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
+        public HoneyOutput(ContentRegistry.spr texture, Vector2 gridPos) : base(texture, gridPos) {
 
         }
 
-        public override void Update(GameTime gameTime) {
+        public override void Update(GameTime gameTime, World world) {
+            availableHoney = world.MainHive.honeyAmt;
 
-            if (!(beeInside is null) && beeInside.honeyAmt < Bee.HONEY_LIMIT) {
+            if (!(BeeInside is null) && BeeInside.honeyAmt < Bee.HONEY_LIMIT) {
 
                 if (tick % honeyOutputTime == 0 && world.MainHive.honeyAmt > 0) {
                     world.MainHive.honeyAmt--;
-                    beeInside.honeyAmt++;
+                    BeeInside.honeyAmt++;
                 }
 
                 tick++;
@@ -29,11 +32,11 @@ namespace Assembee.Game.Entities.Tiles
             }
             
 
-            base.Update(gameTime);
+            base.Update(gameTime, world);
         }
 
         public override string GetInfoString() {
-            return "Honey Output:\nHoney: " + world.MainHive.honeyAmt.ToString();
+            return "Honey Output:\nHoney: " + availableHoney.ToString();
         }
 
     }

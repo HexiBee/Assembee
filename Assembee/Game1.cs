@@ -52,7 +52,6 @@ namespace Assembee {
         }
 
         protected override void LoadContent() {
-
             ContentRegistry.LoadContent(Content);
 
             // Sets the initial resolution
@@ -90,6 +89,7 @@ namespace Assembee {
                         SaveManager.Save(world);
                         gameState = GameState.TitleScreen;
                         audio.StopMusic();
+                        audio.StopAllSounds();
                         break;
                     }
 
@@ -113,19 +113,19 @@ namespace Assembee {
                         Tile newTile;
                         switch (selectedBuilding) {
                             case Building.Apartment:
-                                newTile = new Apartment(ContentRegistry.spr.t_apartments, Input.getMouseHexTile(camera), world);
+                                newTile = new Apartment(ContentRegistry.spr.t_apartments, Input.getMouseHexTile(camera));
                                 break;
 
                             case Building.HoneyProducer:
-                                newTile = new HoneyFactory(ContentRegistry.spr.t_honey_producer, Input.getMouseHexTile(camera), world);
+                                newTile = new HoneyFactory(ContentRegistry.spr.t_honey_producer, Input.getMouseHexTile(camera));
                                 break;
 
                             case Building.WaxProducer:
-                                newTile = new WaxFactory(ContentRegistry.spr.t_wax_producer, Input.getMouseHexTile(camera), world);
+                                newTile = new WaxFactory(ContentRegistry.spr.t_wax_producer, Input.getMouseHexTile(camera));
                                 break;
 
                             default:
-                                newTile = new Tile(ContentRegistry.spr.t_hex, Input.getMouseHexTile(camera), world);
+                                newTile = new Tile(ContentRegistry.spr.t_hex, Input.getMouseHexTile(camera));
                                 break;
                         }
                         int honey, wax;
@@ -136,7 +136,7 @@ namespace Assembee {
                                 world.AddTile(newTile);
                                 audio.PlaySound(Audio.sfx.place, 1f, 0f);
                                 if (selectedBuilding == Building.Apartment) {
-                                    world.AddBee(new Bee(ContentRegistry.spr.a_bee, newTile.position, world));
+                                    world.AddBee(new Bee(ContentRegistry.spr.a_bee, newTile.position));
                                 }
                             }
                         }

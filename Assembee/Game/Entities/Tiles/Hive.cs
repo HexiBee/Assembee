@@ -13,11 +13,11 @@ namespace Assembee.Game.Entities.Tiles {
 
         private int tick = 0;
         
-        public Hive(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public Hive(ContentRegistry.spr texture, Vector2 pos) : base(texture, pos) {
         }
 
-        public override void Update(GameTime gameTime) {
-            if (beeInside != null) {
+        public override void Update(GameTime gameTime, World world) {
+            if (BeeInside != null) {
                 tick++;
                 DepositResources();
             }
@@ -25,12 +25,12 @@ namespace Assembee.Game.Entities.Tiles {
 
         public void DepositResources() {
             if (tick % moveTime == 0) {
-                if (beeInside.honeyAmt > 0) {
-                    beeInside.honeyAmt--;
+                if (BeeInside.honeyAmt > 0) {
+                    BeeInside.honeyAmt--;
                     honeyAmt++;
                 }
-                if (beeInside.waxAmt > 0) {
-                    beeInside.waxAmt--;
+                if (BeeInside.waxAmt > 0) {
+                    BeeInside.waxAmt--;
                     waxAmt++;
                 }
             }

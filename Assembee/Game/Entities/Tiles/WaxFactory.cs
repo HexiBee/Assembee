@@ -13,13 +13,13 @@ namespace Assembee.Game.Entities.Tiles {
         static int HONEY_NEEDED = 15;
         static int WAX_NEEDED = 5;
         static string NAME = "Wax Factory";
-        public WaxFactory(ContentRegistry.spr texture, Vector2 pos, World world) : base(texture, pos, world) {
+        public WaxFactory(ContentRegistry.spr texture, Vector2 pos) : base(texture, pos) {
             
     }
 
 
-        public override void Update(GameTime gameTime) {
-            if (!(beeInside is null) && beeInside.waxAmt < Bee.WAX_LIMIT) {
+        public override void Update(GameTime gameTime, World world) {
+            if (!(BeeInside is null) && BeeInside.waxAmt < Bee.WAX_LIMIT) {
                 tick++;
                 GenerateWax();
             } else {
@@ -27,14 +27,14 @@ namespace Assembee.Game.Entities.Tiles {
             }
         }
         public void GenerateWax() {
-            if (beeInside.honeyAmt > 0) {
+            if (BeeInside.honeyAmt > 0) {
                 pauseAnim = false;
                 if (tick % waxProcessTime == 0) {
                     honeyProcessed++;
-                    beeInside.honeyAmt--;
+                    BeeInside.honeyAmt--;
                 }
                 if (honeyProcessed >= honeyNeeded) {
-                    beeInside.waxAmt++;
+                    BeeInside.waxAmt++;
                     honeyProcessed = 0;
                 }
             } else {

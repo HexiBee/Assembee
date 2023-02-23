@@ -14,15 +14,15 @@ namespace Assembee.Game.Entities.Tiles {
 
         //}
 
-        public Flowers(int nectarAmt, ContentRegistry.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
+        public Flowers(int nectarAmt, ContentRegistry.spr texture, Vector2 gridPos) : base(texture, gridPos) {
             this.nectarAmt = nectarAmt;
         }
 
 
-        public override void Update(GameTime gameTime) {
-            if (beeInside != null) {
+        public override void Update(GameTime gameTime, World world) {
+            if (BeeInside != null) {
                 tick++;
-                TakeNectar(beeInside);
+                TakeNectar(BeeInside);
             }
         }
 

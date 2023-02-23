@@ -8,10 +8,7 @@ using Newtonsoft.Json;
 namespace Assembee.Game.Entities {
     public class Entity {
 
-        [JsonIgnore]
-        public World world;
-
-        public Vector2 position { get; set; }
+        public Vector2 position;
 
         protected bool pauseAnim = false;
 
@@ -19,9 +16,8 @@ namespace Assembee.Game.Entities {
 
         public ContentRegistry.spr texture { get; set; }
 
-        public Entity(ContentRegistry.spr texture, Vector2 position, World world) {
+        public Entity(ContentRegistry.spr texture, Vector2 position) {
             this.position = position;
-            this.world = world;
             this.texture = texture;
             sprite = new Sprite(this.texture);
         }
@@ -30,7 +26,7 @@ namespace Assembee.Game.Entities {
             sprite.Draw(spriteBatch, position, pauseAnim ? 0 : AnimationFrameFromTick(animTick));
         }
 
-        public virtual void Update(GameTime gameTime) {
+        public virtual void Update(GameTime gameTime, World world) {
         }
 
         protected virtual int AnimationFrameFromTick(int animTick) {

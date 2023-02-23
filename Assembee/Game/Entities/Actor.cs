@@ -7,7 +7,7 @@ using System.Text;
 namespace Assembee.Game.Entities {
     public class Actor : Entity {
         
-        public Actor(ContentRegistry.spr texture, Vector2 pos, World world): base(texture, pos, world) {
+        public Actor(ContentRegistry.spr texture, Vector2 pos): base(texture, pos) {
 
         }
 

@@ -10,9 +10,7 @@ namespace Assembee.Game.Entities.Tiles {
         static int HONEY_NEEDED = 5;
         static int WAX_NEEDED = 5;
         static string NAME = "Apartment";
-        public Apartment(ContentRegistry.spr texture, Vector2 gridPos, World world) : base(texture, gridPos, world) {
-
-            
+        public Apartment(ContentRegistry.spr texture, Vector2 gridPos) : base(texture, gridPos) {
         }
 
         public override string GetInfoString() {
@@ -29,9 +27,9 @@ namespace Assembee.Game.Entities.Tiles {
             return IBuildable.BuildUI(world, HONEY_NEEDED, WAX_NEEDED, NAME);
         }
 
-        public override void Update(GameTime gameTime) {
-            pauseAnim = beeInside is null;
-            base.Update(gameTime);
+        public override void Update(GameTime gameTime, World world) {
+            pauseAnim = BeeInside is null;
+            base.Update(gameTime, world);
         }
     }
 }

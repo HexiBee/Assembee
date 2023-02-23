@@ -80,8 +80,10 @@ namespace Assembee.Game {
             if (AudioDisabled) return;
 
             soundEffectInstanceCounts[(int)sound]--;
-            if (soundEffectInstanceCounts[(int)sound] == 0)
+            if (soundEffectInstanceCounts[(int)sound] <= 0) {
                 soundEffectInstances[(int)sound].Stop();
+                soundEffectInstanceCounts[(int)sound] = 0;
+            }
         }
 
         public void StopMusic() {
@@ -90,6 +92,16 @@ namespace Assembee.Game {
             MediaPlayer.Stop();
         }
 
+        public void StopAllSounds() {
+            if (AudioDisabled) return;
+
+            for (int i = 0; i < soundEffectInstances.Count; i++) {
+                if (soundEffectInstanceCounts[i] > 0) {
+                    soundEffectInstances[i].Stop();
+                    soundEffectInstanceCounts[i] = 0;
+                }
+            }
+        }
 
         void MediaPlayer_MediaStateChanged(object sender, System.EventArgs e) {
             // 0.0f is silent, 1.0f is full volume

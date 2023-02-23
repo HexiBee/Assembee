@@ -60,12 +60,12 @@ namespace Assembee.Game {
         /// Adds or replaces a tile in the world.
         /// </summary>
         public void AddTile(Tile tile) {
-            Tile oldTile = GetTile(tile.gridPos);
+            Tile oldTile = GetTile(tile.GridPosition);
             if (oldTile != null) {
                 Remove(oldTile);
             }
             
-            tileArray[(int)tile.gridPos.X + WORLD_GRID_SIZE, (int)tile.gridPos.Y + WORLD_GRID_SIZE] = tile;
+            tileArray[(int)tile.GridPosition.X + WORLD_GRID_SIZE, (int)tile.GridPosition.Y + WORLD_GRID_SIZE] = tile;
             Tiles.Add(tile);
             if (tile.GetType() == typeof(Hive)) {
                 MainHive = (Hive)tile;
@@ -103,7 +103,7 @@ namespace Assembee.Game {
         /// Removes a tile from the world.
         /// </summary>
         public void Remove(Tile tile) {
-            tileArray[(int)tile.gridPos.X + WORLD_GRID_SIZE, (int)tile.gridPos.Y + WORLD_GRID_SIZE] = null;
+            tileArray[(int)tile.GridPosition.X + WORLD_GRID_SIZE, (int)tile.GridPosition.Y + WORLD_GRID_SIZE] = null;
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Assembee.Game {
             Bees.Clear();
             
             foreach (Tile tile in Tiles) {
-                tileArray[(int)tile.gridPos.X + WORLD_GRID_SIZE, (int)tile.gridPos.Y + WORLD_GRID_SIZE] = null;
+                tileArray[(int)tile.GridPosition.X + WORLD_GRID_SIZE, (int)tile.GridPosition.Y + WORLD_GRID_SIZE] = null;
             }
 
             Tiles.Clear();
@@ -150,7 +150,7 @@ namespace Assembee.Game {
 
             for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
                 for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
-                    AddBackground(new Tile(grass_sprites[random.Next(grass_sprites.Length)], new Vector2(x, y), this));
+                    AddBackground(new Tile(grass_sprites[random.Next(grass_sprites.Length)], new Vector2(x, y)));
                 }
             }
 
@@ -164,19 +164,19 @@ namespace Assembee.Game {
         /// Generates a new world with starting buildings and random flowers. Will reset entire world.
         /// </summary>
         private void GenerateWorld() {
-            Hive hive = new Hive(ContentRegistry.spr.t_hive, new Vector2(0, 0), this);
-            Bee bee = new Bee(ContentRegistry.spr.a_bee, new Vector2(0, 0), this);
+            Hive hive = new Hive(ContentRegistry.spr.t_hive, new Vector2(0, 0));
+            Bee bee = new Bee(ContentRegistry.spr.a_bee, new Vector2(0, 0));
 
             AddBee(bee);
-            hive.beeInside = bee;
+            hive.BeeInside = bee;
             AddTile(hive);
 
-            AddTile(new HoneyOutput(ContentRegistry.spr.t_helipad_honey, new Vector2(0, 1), this));
-            AddTile(new WaxOutput(ContentRegistry.spr.t_helipad_wax, new Vector2(-1, 1), this));
+            AddTile(new HoneyOutput(ContentRegistry.spr.t_helipad_honey, new Vector2(0, 1)));
+            AddTile(new WaxOutput(ContentRegistry.spr.t_helipad_wax, new Vector2(-1, 1)));
 
-            AddTile(new HoneyFactory(ContentRegistry.spr.t_honey_producer, new Vector2(1, 0), this));
-            AddTile(new WaxFactory(ContentRegistry.spr.t_wax_producer, new Vector2(-1, 0), this));
-            AddTile(new Apartment(ContentRegistry.spr.t_apartments, new Vector2(1, -1), this));
+            AddTile(new HoneyFactory(ContentRegistry.spr.t_honey_producer, new Vector2(1, 0)));
+            AddTile(new WaxFactory(ContentRegistry.spr.t_wax_producer, new Vector2(-1, 0)));
+            AddTile(new Apartment(ContentRegistry.spr.t_apartments, new Vector2(1, -1)));
 
             Random rand = new Random();
             for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
@@ -184,7 +184,7 @@ namespace Assembee.Game {
                     if (rand.NextDouble() < 0.05 && GetTile(new Vector2(x, y)) is null) {
                         Random r = new Random();
                         int amt = r.Next(300, 650);
-                        AddTile(new Flowers(amt, ContentRegistry.spr.t_flowers, new Vector2(x, y), this));
+                        AddTile(new Flowers(amt, ContentRegistry.spr.t_flowers, new Vector2(x, y)));
                     }
                 }
             }
@@ -225,13 +225,13 @@ namespace Assembee.Game {
             }
 
             SelectedTile = tile;
-            Selector = new Selector(ContentRegistry.spr.entity_selector, Input.getMouseHexTile(MainCamera), this);
+            Selector = new Selector(ContentRegistry.spr.entity_selector, Input.getMouseHexTile(MainCamera));
 
-            if (tile.beeInside != null) {
-                SelectedBee = tile.beeInside;
+            if (tile.BeeInside != null) {
+                SelectedBee = tile.BeeInside;
 
             } else if (SelectedBee != null) {
-                SelectedBee.SetTarget(tile);
+                SelectedBee.SetTarget(tile.position, this);
                 Game1.audio.PlaySound(Audio.sfx.bee, 1f, 0f);
                 SelectedBee = null;
 
@@ -284,13 +284,13 @@ namespace Assembee.Game {
         public void Update(GameTime gameTime) {
             /* Update actors */
             foreach (Actor actor in Actors) {
-                actor.Update(gameTime);
+                actor.Update(gameTime, this);
             }
 
             /* Update tiles */
             for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
                 for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
-                    GetTile(x, y)?.Update(gameTime);
+                    GetTile(x, y)?.Update(gameTime, this);
                 }
             }
         }
