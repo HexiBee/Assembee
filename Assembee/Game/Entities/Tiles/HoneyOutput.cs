@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game.Entities.Tiles
 {
@@ -12,7 +13,7 @@ namespace Assembee.Game.Entities.Tiles
         private int honeyOutputTime = 5;
         private int availableHoney = 0;
 
-        public HoneyOutput(ContentRegistry.spr texture, Vector2 gridPos) : base(texture, gridPos) {
+        public HoneyOutput(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
 
         }
 

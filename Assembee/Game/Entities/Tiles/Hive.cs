@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Assembee.Game.GameMath;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Assembee.Game.Entities.Tiles {
 
         private int tick = 0;
         
-        public Hive(ContentRegistry.spr texture, Vector2 pos) : base(texture, pos) {
+        public Hive(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
         }
 
         public override void Update(GameTime gameTime, World world) {

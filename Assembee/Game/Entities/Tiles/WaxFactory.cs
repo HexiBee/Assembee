@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game.Entities.Tiles {
     class WaxFactory : Tile{
@@ -13,7 +14,7 @@ namespace Assembee.Game.Entities.Tiles {
         static int HONEY_NEEDED = 15;
         static int WAX_NEEDED = 5;
         static string NAME = "Wax Factory";
-        public WaxFactory(ContentRegistry.spr texture, Vector2 pos) : base(texture, pos) {
+        public WaxFactory(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
             
     }
 

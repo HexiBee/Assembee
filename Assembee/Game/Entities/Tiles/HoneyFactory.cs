@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game.Entities.Tiles {
     class HoneyFactory : Tile {
@@ -15,7 +16,7 @@ namespace Assembee.Game.Entities.Tiles {
         //public int honeyAmt = 0;//, nectarAmt = 0;
         int tick = 0, nectarProcessTime = 38, nectarProcessed = 0, nectarNeeded = 4;
 
-        public HoneyFactory(ContentRegistry.spr texture, Vector2 pos) : base(texture, pos) {
+        public HoneyFactory(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
 
         }
 

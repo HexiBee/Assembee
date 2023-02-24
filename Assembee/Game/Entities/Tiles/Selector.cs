@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game.Entities.Tiles {
     class Selector : Tile {
-        public Selector(ContentRegistry.spr texture, Vector2 gridPos) : base(texture, gridPos) {
+        public Selector(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
 
         }
 

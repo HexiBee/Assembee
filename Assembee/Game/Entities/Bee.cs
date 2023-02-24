@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Assembee.Game.GameMath;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using System;
@@ -29,8 +30,8 @@ namespace Assembee.Game.Entities {
         public void SetTarget(Vector2 target, World world) {
             start = position;
 
-            Tile startTile = world.GetTile(Input.hexRound(start / (127.0f * (float)Math.Sqrt(3)))); //TODO: overload GetTile to take in different position objects (Vector2 and GridPosition)
-            Tile targetTile = world.GetTile(Input.hexRound(target / (127.0f * (float)Math.Sqrt(3)))); //TODO: overload GetTile to take in different position objects (Vector2 and GridPosition)
+            Tile startTile = world.GetTile(HexPosition.PositionToHexPosition(start));
+            Tile targetTile = world.GetTile(HexPosition.PositionToHexPosition(target));
 
             foreach (Bee bee in world.Bees.ToArray()) {
                 if (bee == this) continue;
@@ -49,7 +50,7 @@ namespace Assembee.Game.Entities {
 
         public override void Update(GameTime gameTime, World world) {
             if (init == 0) {
-                Tile startTile = world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3))));
+                Tile startTile = world.GetTile(HexPosition.PositionToHexPosition(start));
                 startTile.BeeInside = this;
                 start = position;
                 init++;
@@ -62,7 +63,7 @@ namespace Assembee.Game.Entities {
                 if (t >= 1) {
                     position = target;
 
-                    world.GetTile(Input.hexRound(position / (127.0f * (float)Math.Sqrt(3)))).BeeInside = this;
+                    world.GetTile(HexPosition.PositionToHexPosition(position)).BeeInside = this;
 
                     Flying = false;
                     world.GameAudio.StopSound(Audio.sfx.bee);

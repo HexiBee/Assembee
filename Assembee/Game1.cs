@@ -100,7 +100,7 @@ namespace Assembee {
                     camera.Update();
 
                     // Tile conditions
-                    if (Input.Click(0) && !HUD.OverActiveElement(Input.getMousePos().ToPoint())) {
+                    if (Input.Click(0) && !HUD.OverActiveElement(Input.getMousePosition().ToPoint())) {
                         Tile tileClicked = world.GetTile(Input.getMouseHexTile(camera));
 
                         // Deselect a building when left click
@@ -109,7 +109,7 @@ namespace Assembee {
                         world.SelectTile(tileClicked);
                     }
 
-                    if (Input.Click(1) && world.GetTile(Input.getMouseHexTile(camera)) is null && !HUD.OverActiveElement(Input.getMousePos().ToPoint())) {
+                    if (Input.Click(1) && world.GetTile(Input.getMouseHexTile(camera)) is null && !HUD.OverActiveElement(Input.getMousePosition().ToPoint())) {
                         Tile newTile;
                         switch (selectedBuilding) {
                             case Building.Apartment:

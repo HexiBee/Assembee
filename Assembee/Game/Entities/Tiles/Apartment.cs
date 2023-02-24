@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game.Entities.Tiles {
     public class Apartment : Tile, IBuildable {
@@ -10,7 +11,7 @@ namespace Assembee.Game.Entities.Tiles {
         static int HONEY_NEEDED = 5;
         static int WAX_NEEDED = 5;
         static string NAME = "Apartment";
-        public Apartment(ContentRegistry.spr texture, Vector2 gridPos) : base(texture, gridPos) {
+        public Apartment(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
         }
 
         public override string GetInfoString() {

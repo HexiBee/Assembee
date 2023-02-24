@@ -13,11 +13,11 @@ namespace Assembee.Game.Entities {
         public Bee BeeInside { get; set; } = null;
 
         [JsonProperty]
-        public Vector2 GridPosition { get; private set; }
+        public HexPosition HexPosition { get; private set; }
 
-        public Tile(ContentRegistry.spr texture, Vector2 gridPos) : base(texture, gridPos) {
-            this.GridPosition = gridPos;
-            position = hexMatrix * new Vector2(gridPos.X * 127, gridPos.Y * 127);
+        public Tile(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, Vector2.Zero) {
+            this.HexPosition = hexPosition;
+            position = HexPosition.HexPositionToPosition(hexPosition);
         }
 
         public override void Update(GameTime gameTime, World world) {

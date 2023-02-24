@@ -10,7 +10,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using Assembee.Game.Entities.Tiles;
 using System.Security.AccessControl;
-
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game {
 
@@ -78,7 +78,7 @@ namespace Assembee.Game {
            
             foreach (Bee b in saveData.bees) {
                 if (!b.Flying) {
-                    Tile t = world.GetTile(Input.hexRound(b.position / (127.0f * (float)Math.Sqrt(3))));
+                    Tile t = world.GetTile(HexPosition.PositionToHexPosition(b.position));
                     if (t != null) t.BeeInside = b;
                 }
                 world.AddBee(b);

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game.Entities.Tiles {
     public class Flowers : Tile {
@@ -14,7 +15,7 @@ namespace Assembee.Game.Entities.Tiles {
 
         //}
 
-        public Flowers(int nectarAmt, ContentRegistry.spr texture, Vector2 gridPos) : base(texture, gridPos) {
+        public Flowers(int nectarAmt, ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
             this.nectarAmt = nectarAmt;
         }
 

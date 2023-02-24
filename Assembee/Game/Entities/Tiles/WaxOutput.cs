@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game.Entities.Tiles
 {
@@ -12,7 +13,7 @@ namespace Assembee.Game.Entities.Tiles
         private int waxOutputTime = 5;
         private int availableWax = 0;
 
-        public WaxOutput(ContentRegistry.spr texture, Vector2 pos) : base(texture, pos) {
+        public WaxOutput(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
             
         }
 

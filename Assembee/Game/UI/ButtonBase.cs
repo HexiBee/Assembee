@@ -26,7 +26,7 @@ namespace Assembee.Game.UI {
 
         protected override void Draw(SpriteBatch spriteBatch) {
 
-            if (IntersectingGlobalPoint(Input.getMousePos().ToPoint())) {
+            if (IntersectingGlobalPoint(Input.getMousePosition().ToPoint())) {
                 if (Input.MouseHold(0)) {
                     color = CLICK_COLOR;
                 } else {

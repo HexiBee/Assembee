@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Input.Touch;
+using Assembee.Game.GameMath;
 
 namespace Assembee.Game {
     class Input {
@@ -47,9 +48,6 @@ namespace Assembee.Game {
 
         public int mx;
         public int my;
-
-        private const float SQRT3 = 1.73205080757f;
-
 
         // Updates the keyboard states (every frame)
         public static void GetState() {
@@ -131,71 +129,24 @@ namespace Assembee.Game {
         }
 
         // Returns the mouse's position 
-        public static Vector2 getMousePos() {
+        public static Vector2 getMousePosition() {
             return new Vector2(currentMouseState.X, currentMouseState.Y);
         }
 
-        public static Vector2 getMouseTile(Camera camera) {
-            Vector2 mousePos = getMousePos();
+        public static Vector2 getMouseWorldPosition(Camera camera) {
+            Vector2 mousePos = getMousePosition();
             float mX = (mousePos.X - Game1.windowHandler.windowWidth / 2) * camera.Scale + camera.Position.X;
             float mY = (mousePos.Y - Game1.windowHandler.windowHeight / 2) * camera.Scale + camera.Position.Y; 
             return new Vector2((int)mX, (int)mY);
         }
 
-        public static Vector2 getMouseHexTile(Camera camera) {
-            Vector2 mousePos = getMouseTile(camera);
-            float mX = mousePos.X / (127.0f * (float)Math.Sqrt(3));
-            float mY = mousePos.Y / (127.0f * (float)Math.Sqrt(3));
+        public static HexPosition getMouseHexTile(Camera camera) {
+            Vector2 mousePos = getMouseWorldPosition(camera);
 
-            //float mQ = ((float)Math.Sqrt(3.0f) / 3.0f * mX - 1.0f / 3.0f * mY) / (127.0f);
-            //float mR = 2.0f / 3.0f * mY / (127.0f);
-
-            return hexRound(new Vector2(mX, mY));
+            return HexPosition.PositionToHexPosition(mousePos);
         }
 
-        private static Vector2 axialRound(Vector2 coord) {
-            return cube_to_axial(cube_round(axial_to_cube(coord)));
-        }
-
-        private static Vector3 axial_to_cube(Vector2 hex) {
-            return new Vector3(hex.X, hex.Y, -hex.X - hex.Y);
-        }
-
-        private static Vector2 cube_to_axial(Vector3 cube) {
-            return new Vector2(cube.X, cube.Y);
-        }
-
-        private static Vector3 cube_round(Vector3 cube) {
-
-            float q = (float)Math.Round(cube.X);
-            float r = (float)Math.Round(cube.Y);
-            float s = (float)Math.Round(cube.Z);
-
-            float q_diff = (float)Math.Abs(q - cube.X);
-            float r_diff = (float)Math.Abs(r - cube.Y);
-            float s_diff = (float)Math.Abs(s - cube.Z);
-
-            if (q_diff > r_diff && q_diff > s_diff) {
-                q = -r - s;
-            } else if (r_diff > s_diff) {
-                r = -q - s;
-            } else {
-                s = -q - r;
-            }
-
-            return new Vector3(q, r, s);
-
-        }
-
-        public static Vector2 hexRound(Vector2 coord) {
-
-            float x = 0.5f * (SQRT3 * coord.X - coord.Y) * (float)Math.Sqrt(4.0f / 3.0f);
-            float y = coord.Y * (float)Math.Sqrt(4.0f / 3.0f);
-            return axialRound(new Vector2(x, y));
-
-        }
-
-            //direction: -1 is up, 1 is down  ?
+        //direction: -1 is up, 1 is down  ?
         public static int scrollPressed() {
             if (currentScrollValue < previousScrollValue) {
                 return 1;

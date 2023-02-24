@@ -38,7 +38,7 @@ namespace Assembee.Game {
         public void Update() {
 
             if (Input.MouseHold(0)) {
-                mOffset = (mPosStart - Input.getMousePos()) * desiredScale;
+                mOffset = (mPosStart - Input.getMousePosition()) * desiredScale;
                 desiredPosition += mOffset;
                 spdMove = SPD_MOVE_MOUSE;
             } else {
@@ -58,7 +58,7 @@ namespace Assembee.Game {
                 desiredPosition += new Vector2(0, moveSpeed);
             }
 
-            mPosStart = Input.getMousePos();
+            mPosStart = Input.getMousePosition();
 
             // -- scrolling
             if (Input.scrollPressed() != 0) {

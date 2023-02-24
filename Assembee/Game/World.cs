@@ -60,12 +60,12 @@ namespace Assembee.Game {
         /// Adds or replaces a tile in the world.
         /// </summary>
         public void AddTile(Tile tile) {
-            Tile oldTile = GetTile(tile.GridPosition);
+            Tile oldTile = GetTile(tile.HexPosition);
             if (oldTile != null) {
                 Remove(oldTile);
             }
             
-            tileArray[(int)tile.GridPosition.X + WORLD_GRID_SIZE, (int)tile.GridPosition.Y + WORLD_GRID_SIZE] = tile;
+            tileArray[(int)tile.HexPosition.X + WORLD_GRID_SIZE, (int)tile.HexPosition.Y + WORLD_GRID_SIZE] = tile;
             Tiles.Add(tile);
             if (tile.GetType() == typeof(Hive)) {
                 MainHive = (Hive)tile;
@@ -84,8 +84,8 @@ namespace Assembee.Game {
         /// </summary>
         /// <param name="gridPos"></param>
         /// <returns></returns>
-        public Tile GetTile(Vector2 gridPos) {
-            return GetTile((int)gridPos.X, (int)gridPos.Y);
+        public Tile GetTile(HexPosition hexPosition) {
+            return GetTile(hexPosition.X, hexPosition.Y);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Assembee.Game {
         /// Removes a tile from the world.
         /// </summary>
         public void Remove(Tile tile) {
-            tileArray[(int)tile.GridPosition.X + WORLD_GRID_SIZE, (int)tile.GridPosition.Y + WORLD_GRID_SIZE] = null;
+            tileArray[(int)tile.HexPosition.X + WORLD_GRID_SIZE, (int)tile.HexPosition.Y + WORLD_GRID_SIZE] = null;
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Assembee.Game {
             Bees.Clear();
             
             foreach (Tile tile in Tiles) {
-                tileArray[(int)tile.GridPosition.X + WORLD_GRID_SIZE, (int)tile.GridPosition.Y + WORLD_GRID_SIZE] = null;
+                tileArray[(int)tile.HexPosition.X + WORLD_GRID_SIZE, (int)tile.HexPosition.Y + WORLD_GRID_SIZE] = null;
             }
 
             Tiles.Clear();
@@ -150,7 +150,7 @@ namespace Assembee.Game {
 
             for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
                 for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
-                    AddBackground(new Tile(grass_sprites[random.Next(grass_sprites.Length)], new Vector2(x, y)));
+                    AddBackground(new Tile(grass_sprites[random.Next(grass_sprites.Length)], new HexPosition(x, y)));
                 }
             }
 
@@ -164,27 +164,27 @@ namespace Assembee.Game {
         /// Generates a new world with starting buildings and random flowers. Will reset entire world.
         /// </summary>
         private void GenerateWorld() {
-            Hive hive = new Hive(ContentRegistry.spr.t_hive, new Vector2(0, 0));
+            Hive hive = new Hive(ContentRegistry.spr.t_hive, new HexPosition(0, 0));
             Bee bee = new Bee(ContentRegistry.spr.a_bee, new Vector2(0, 0));
 
             AddBee(bee);
             hive.BeeInside = bee;
             AddTile(hive);
 
-            AddTile(new HoneyOutput(ContentRegistry.spr.t_helipad_honey, new Vector2(0, 1)));
-            AddTile(new WaxOutput(ContentRegistry.spr.t_helipad_wax, new Vector2(-1, 1)));
+            AddTile(new HoneyOutput(ContentRegistry.spr.t_helipad_honey, new HexPosition(0, 1)));
+            AddTile(new WaxOutput(ContentRegistry.spr.t_helipad_wax, new HexPosition(-1, 1)));
 
-            AddTile(new HoneyFactory(ContentRegistry.spr.t_honey_producer, new Vector2(1, 0)));
-            AddTile(new WaxFactory(ContentRegistry.spr.t_wax_producer, new Vector2(-1, 0)));
-            AddTile(new Apartment(ContentRegistry.spr.t_apartments, new Vector2(1, -1)));
+            AddTile(new HoneyFactory(ContentRegistry.spr.t_honey_producer, new HexPosition(1, 0)));
+            AddTile(new WaxFactory(ContentRegistry.spr.t_wax_producer, new HexPosition(-1, 0)));
+            AddTile(new Apartment(ContentRegistry.spr.t_apartments, new HexPosition(1, -1)));
 
             Random rand = new Random();
             for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
                 for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
-                    if (rand.NextDouble() < 0.05 && GetTile(new Vector2(x, y)) is null) {
+                    if (rand.NextDouble() < 0.05 && GetTile(new HexPosition(x, y)) is null) {
                         Random r = new Random();
                         int amt = r.Next(300, 650);
-                        AddTile(new Flowers(amt, ContentRegistry.spr.t_flowers, new Vector2(x, y)));
+                        AddTile(new Flowers(amt, ContentRegistry.spr.t_flowers, new HexPosition(x, y)));
                     }
                 }
             }
