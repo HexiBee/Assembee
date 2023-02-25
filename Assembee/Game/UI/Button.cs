@@ -12,5 +12,9 @@ namespace Assembee.Game.UI {
             text = new Text(this, textString, new Vector2(0, 0), textSize, Orientation.Center);
         }
 
+        public void SetString(string stringText) {
+            text.SetString(stringText);
+        }
+
     }
 }

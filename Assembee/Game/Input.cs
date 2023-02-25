@@ -20,7 +20,6 @@ namespace Assembee.Game {
         public static readonly Btn Three = new Btn(Keys.D3);
         public static readonly List<Btn> numKeys = new List<Btn>() { One, Two, Three };
 
-
         public static Btn Enter = new Btn(Keys.Enter);
         public static Btn Mute = new Btn(Keys.M);
 
@@ -29,15 +28,14 @@ namespace Assembee.Game {
         public static readonly Btn LoadGame = new Btn(Keys.Enter);
         public static readonly Btn SaveGame = new Btn(Keys.J);
 
+        private static KeyboardState currentKeyState;
+        private static KeyboardState previousKeyState;
 
-        static KeyboardState currentKeyState;
-        static KeyboardState previousKeyState;
+        private static GamePadState currentButtonState;
+        private static GamePadState previousButtonState;
 
-        static GamePadState currentButtonState;
-        static GamePadState previousButtonState;
-
-        public static MouseState currentMouseState;
-        public static MouseState previousMouseState;
+        private static MouseState currentMouseState;
+        private static MouseState previousMouseState;
 
         static int currentScrollValue;
         static int previousScrollValue;
@@ -87,9 +85,6 @@ namespace Assembee.Game {
             return currentButtonState.IsButtonDown(button);
         }
 
-
-
-        
         // Detects the frame when a key is pressed
         public static bool keyPressed(Btn btn) {
             //bool down = false;

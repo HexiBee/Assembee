@@ -23,6 +23,8 @@ namespace Assembee.Game.Entities {
         private static Panel beePanel = new Panel(gameUI, new Vector2(0, 0), new Vector2(230, 165), Element.Orientation.UpperLeft);
         private static Text beeText = new Text(beePanel, "Bee:", Vector2.Zero, 0.8f, Element.Orientation.Center);
 
+        private static Button muteButton = new Button(gameUI, "Mute", 0.8f, new Vector2(0, 0), new Vector2(100, 50), Element.Orientation.LowerRight);
+
         private static Frame menuUI = new Frame(root);
 
         private static Panel menuPanel = new Panel(menuUI, new Vector2(0, 0), new Vector2(100, 100), Element.Orientation.Center);
@@ -41,6 +43,8 @@ namespace Assembee.Game.Entities {
 
             newButton.AssignFunction(world.NewGame);
             loadButton.AssignFunction(world.LoadGame);
+
+            muteButton.AssignFunction(Game1.audio.ToggleMute);
         }
 
         public static void DrawMenu(SpriteBatch spriteBatch) {
@@ -82,6 +86,7 @@ namespace Assembee.Game.Entities {
             } else {
                 buildPanel.active = false;
             }
+
             if (world != null) {
                 if (!(world.SelectedTile is null)) {
                     string tileString = world.SelectedTile.GetInfoString();
@@ -105,6 +110,8 @@ namespace Assembee.Game.Entities {
                     beePanel.active = false;
                 }
             }
+
+            muteButton.SetString(Game1.audio.Muted ? "Unmute" : "Mute");
 
             root.DrawAll(spriteBatch);
         }

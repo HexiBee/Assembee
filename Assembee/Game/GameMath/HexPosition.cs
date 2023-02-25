@@ -25,11 +25,6 @@ namespace Assembee.Game.GameMath
         public HexPosition() {
         }
 
-        public HexPosition(Vector2 vector) {
-            X = (int)vector.X;
-            Y = (int)vector.Y;
-        }
-
         public static HexPosition PositionToHexPosition(Vector2 position) {
             float x = 0.5f * (SQRT3 * position.X - position.Y) * FAC;
             float y = position.Y * FAC;

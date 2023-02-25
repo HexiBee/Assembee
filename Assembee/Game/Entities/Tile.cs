@@ -8,8 +8,6 @@ using System.Text;
 
 namespace Assembee.Game.Entities {
     public class Tile : Entity {
-        private static readonly Matrix2 hexMatrix = new Matrix2((float)Math.Sqrt(3), (float)Math.Sqrt(3) / 2.0f, 0.0f, 3.0f / 2.0f);
-
         public Bee BeeInside { get; set; } = null;
 
         [JsonProperty]

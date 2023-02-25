@@ -8,9 +8,9 @@ using Assembee.Game.GameMath;
 namespace Assembee.Game.Entities.Tiles {
     public class Apartment : Tile, IBuildable {
 
-        static int HONEY_NEEDED = 5;
-        static int WAX_NEEDED = 5;
-        static string NAME = "Apartment";
+        private static int HONEY_NEEDED = 5;
+        private static int WAX_NEEDED = 5;
+        private static string NAME = "Apartment";
         public Apartment(ContentRegistry.spr texture, HexPosition hexPosition) : base(texture, hexPosition) {
         }
 
