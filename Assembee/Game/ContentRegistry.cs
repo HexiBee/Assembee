@@ -38,7 +38,7 @@ namespace Assembee.Game {
         private static Dictionary<spr, int> AnimationRegistry = new Dictionary<spr, int>();
 
         public static void LoadContent(ContentManager content) {
-            TextureRegistry.Add(spr.a_bee, content.Load<Texture2D>("actor_bee_up"));
+            TextureRegistry.Add(spr.a_bee, content.Load<Texture2D>("actor_bee"));
 
             TextureRegistry.Add(spr.r_honey_small, content.Load<Texture2D>("resource_honey_small"));
             TextureRegistry.Add(spr.r_propolis_small, content.Load<Texture2D>("resource_propolis_small"));

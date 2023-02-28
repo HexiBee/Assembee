@@ -13,47 +13,29 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../Assets/beeming.ogg
+#begin ../../Assets/songs/beeming.ogg
 /importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:../../Assets/beeming.ogg;beeming
+/build:../../Assets/songs/beeming.ogg;song_beeming
 
-#begin ../../Assets/Sprites/actor_bee_down.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../Assets/Sprites/actor_bee_down.png;actor_bee_down
+#begin ../../Assets/sounds/sfx_bee.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:../../Assets/sounds/sfx_bee.wav;sfx_bee
 
-#begin ../../Assets/Sprites/actor_bee_left.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../Assets/Sprites/actor_bee_left.png;actor_bee_left
+#begin ../../Assets/sounds/sfx_click.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:../../Assets/sounds/sfx_click.wav;sfx_click
 
-#begin ../../Assets/Sprites/actor_bee_right.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../../Assets/Sprites/actor_bee_right.png;actor_bee_right
+#begin ../../Assets/sounds/sfx_place.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:../../Assets/sounds/sfx_place.wav;sfx_place
 
 #begin ../../Assets/Sprites/actor_bee_up.png
 /importer:TextureImporter
@@ -65,7 +47,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../Assets/Sprites/actor_bee_up.png;actor_bee_up
+/build:../../Assets/Sprites/actor_bee_up.png;actor_bee
 
 #begin ../../Assets/Sprites/resource_honey_small.png
 /importer:TextureImporter
@@ -127,7 +109,7 @@
 /processorParam:TextureFormat=Color
 /build:../../Assets/Sprites/tile_apartments.png;tile_apartments
 
-#begin ../../Assets/Sprites/tile_flowers.png
+#begin ../../Assets/sprites/tile_flowers.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -137,7 +119,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../Assets/Sprites/tile_flowers.png;tile_flowers
+/build:../../Assets/sprites/tile_flowers.png;tile_flowers
 
 #begin ../../Assets/Sprites/tile_grass_0.png
 /importer:TextureImporter
@@ -259,40 +241,17 @@
 /processorParam:TextureFormat=Color
 /build:../../Assets/Sprites/ui_panel.png;ui_panel
 
-#begin font1.spritefont
+#begin arial_24.spritefont
 /importer:FontDescriptionImporter
-/processor:LocalizedFontProcessor
+/processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:font1.spritefont;font1
+/build:arial_24.spritefont;arial_24
 
-#begin sfx_bee.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sfx_bee.wav;sfx_bee
-
-#begin sfx_click.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sfx_click.wav;sfx_click
-
-#begin sfx_place.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sfx_place.wav;sfx_place
-
-#begin tile_flowers.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
+#begin arial_36.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:tile_flowers.png;tile_flowers
+/processorParam:TextureFormat=Compressed
+/build:arial_36.spritefont;arial_36
 

@@ -23,12 +23,12 @@ namespace Assembee.Game.Entities {
         private static Panel beePanel = new Panel(gameUI, new Vector2(0, 0), new Vector2(230, 165), Element.Orientation.UpperLeft);
         private static Text beeText = new Text(beePanel, "Bee:", Vector2.Zero, 0.8f, Element.Orientation.Center);
 
-        private static Button muteButton = new Button(gameUI, "Mute", 0.8f, new Vector2(0, 0), new Vector2(100, 50), Element.Orientation.LowerRight);
+        private static Button muteButton = new Button(gameUI, "Mute", 0.8f, new Vector2(0, 0), new Vector2(110, 50), Element.Orientation.LowerRight);
 
         private static Frame menuUI = new Frame(root);
 
         private static Panel menuPanel = new Panel(menuUI, new Vector2(0, 0), new Vector2(100, 100), Element.Orientation.Center);
-        private static Text menuText = new Text(menuPanel, "Assembee", new Vector2(0, 0), 1.5f, Element.Orientation.Center);
+        private static Text menuText = new Text(menuPanel, "Assembee", new Vector2(0, 0), 1f, Element.Orientation.Center, Game1.font36);
         private static Button newButton = new Button(menuPanel, "New Game", 1.0f, new Vector2(0, 0), new Vector2(10, 10), Element.Orientation.Center);
         private static Button loadButton = new Button(menuPanel, "Load Save", 1.0f, new Vector2(0, 0), new Vector2(10, 10), Element.Orientation.Center);
 

@@ -18,7 +18,8 @@ namespace Assembee {
         public World world;
 
         public static Audio audio;
-        public static SpriteFont font1;
+        public static SpriteFont font24;
+        public static SpriteFont font36;
 
         public enum Building {
             None,
@@ -57,7 +58,8 @@ namespace Assembee {
             // Sets the initial resolution
             //graphics = new GraphicsDeviceManager(this);
 
-            font1 = Content.Load<SpriteFont>("font1");
+            font24 = Content.Load<SpriteFont>("arial_24");
+            font36 = Content.Load<SpriteFont>("arial_36");
 
             audio = new Audio(Content);
 

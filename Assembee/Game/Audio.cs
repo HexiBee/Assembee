@@ -43,7 +43,7 @@ namespace Assembee.Game {
                     0, 0, 0
                 };
 
-                song = content.Load<Song>("beeming");
+                song = content.Load<Song>("song_beeming");
 
                 MediaPlayer.Volume = volumeSfx;
                 MediaPlayer.MediaStateChanged += MediaPlayer_MediaStateChanged;
