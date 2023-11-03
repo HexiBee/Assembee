@@ -34,8 +34,8 @@ namespace Assembee.Game {
 
         private const spr MISSING_TEXTURE = spr.t_hex;
 
-        private static Dictionary<spr, Texture2D> TextureRegistry = new Dictionary<spr, Texture2D>();
-        private static Dictionary<spr, int> AnimationRegistry = new Dictionary<spr, int>();
+        private static readonly Dictionary<spr, Texture2D> TextureRegistry = new Dictionary<spr, Texture2D>();
+        private static readonly Dictionary<spr, int> AnimationRegistry = new Dictionary<spr, int>();
 
         public static void LoadContent(ContentManager content) {
             TextureRegistry.Add(spr.a_bee, content.Load<Texture2D>("actor_bee"));

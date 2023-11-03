@@ -1,12 +1,12 @@
-﻿using Assembee.Game.Entities.Tiles;
-using Assembee.Game.UI;
+﻿using Assembee.Game.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Assembee.Game.Entities {
+namespace Assembee.Game.Entities
+{
     static class HUD {
         static Color col = Color.Black;
 
@@ -17,11 +17,12 @@ namespace Assembee.Game.Entities {
         private static Panel buildPanel = new Panel(gameUI, Vector2.Zero, new Vector2(100, 100), Element.Orientation.LowerLeft);
         private static Text buildText = new Text(buildPanel, "Building:", Vector2.Zero, 0.8f, Element.Orientation.Center);
 
+        private static Panel beeLinePanel = new Panel(gameUI, Vector2.Zero, new Vector2(100, 100), Element.Orientation.LowerLeft);
+        private static Text beeLineTextA = new Text(beeLinePanel, "Place bee line start", Vector2.Zero, 0.8f, Element.Orientation.Center);
+        private static Text beeLineTextB = new Text(beeLinePanel, "Place bee line end", Vector2.Zero, 0.8f, Element.Orientation.Center);
+
         private static Panel tilePanel = new Panel(gameUI, new Vector2(0, 0), new Vector2(290, 130), Element.Orientation.UpperRight);
         private static Text tileText = new Text(tilePanel, "Tile:", new Vector2(0, 0), 0.8f, Element.Orientation.Center);
-
-        private static Panel beePanel = new Panel(gameUI, new Vector2(0, 0), new Vector2(230, 165), Element.Orientation.UpperLeft);
-        private static Text beeText = new Text(beePanel, "Bee:", Vector2.Zero, 0.8f, Element.Orientation.Center);
 
         private static Button muteButton = new Button(gameUI, "Mute", 0.8f, new Vector2(0, 0), new Vector2(110, 50), Element.Orientation.LowerRight);
 
@@ -36,6 +37,10 @@ namespace Assembee.Game.Entities {
             return root.IntersectingGlobalPoint(point);
         }
 
+        public static bool OverActiveElement(Vector2 position) {
+            return root.IntersectingGlobalPoint(position.ToPoint());
+        }
+
         public static void InitHUD(World world) {
             newButton.FitToChildren(10.0f);
             loadButton.FitToChildren(10.0f);
@@ -45,6 +50,8 @@ namespace Assembee.Game.Entities {
             loadButton.AssignFunction(world.LoadGame);
 
             muteButton.AssignFunction(Game1.audio.ToggleMute);
+
+            beeLinePanel.FitToChildren(10.0f);
         }
 
         public static void DrawMenu(SpriteBatch spriteBatch) {
@@ -62,22 +69,23 @@ namespace Assembee.Game.Entities {
             menuUI.active = false;
             gameUI.active = true;
 
-            if (building != Game1.Building.None) {
+            if (Game1.gameState == Game1.GameState.BuildingTiles) {
                 string buildingString;
                 switch (building) {
                     case Game1.Building.HoneyProducer:
-                        buildingString = HoneyFactory.BuildUI(world);
+                        buildingString = IBuildable.CreateUIString(world, GameRegistry.FactoryRegistry[GameRegistry.fct.honeyProduction]);
                         break;
 
                     case Game1.Building.WaxProducer:
-                        buildingString = WaxFactory.BuildUI(world);
+                        buildingString = IBuildable.CreateUIString(world, GameRegistry.FactoryRegistry[GameRegistry.fct.waxProduction]);
                         break;
 
                     case Game1.Building.Apartment:
-                        buildingString = Apartment.BuildUI(world);
+                        buildingString = IBuildable.CreateUIString(world, "Apartment", Apartment.StaticBuildingRequirements);
                         break;
+
                     default:
-                        buildingString = "";
+                        buildingString = "Select Building (1 - 3)";
                         break;
                 }
                 buildText.SetString(buildingString);
@@ -85,6 +93,20 @@ namespace Assembee.Game.Entities {
                 buildPanel.active = true;
             } else {
                 buildPanel.active = false;
+            }
+
+            if (Game1.gameState == Game1.GameState.BuildingLines) {
+                if (Game1.beeLineStart is null) {
+                    beeLineTextA.active = true;
+                    beeLineTextB.active = false;
+                } else {
+                    beeLineTextA.active = false;
+                    beeLineTextB.active = true;
+                }
+
+                beeLinePanel.active = true;
+            } else {
+                beeLinePanel.active = false;
             }
 
             if (world != null) {
@@ -95,19 +117,6 @@ namespace Assembee.Game.Entities {
                     tilePanel.active = true;
                 } else {
                     tilePanel.active = false;
-                }
-
-                if (world.SelectedBee != null) {
-                    string beeString = "Bee:" +
-                        "\nNectar: " + ((int)world.SelectedBee.nectarAmt).ToString() + " / " + Bee.NECTAR_LIMIT.ToString() +
-                        "\nHoney: " + ((int)world.SelectedBee.honeyAmt).ToString() + " / " + Bee.HONEY_LIMIT.ToString() +
-                        "\nWax: " + ((int)world.SelectedBee.waxAmt).ToString() + " / " + Bee.WAX_LIMIT.ToString();
-
-                    beeText.SetString(beeString);
-                    beePanel.FitToChildren(10.0f);
-                    beePanel.active = true;
-                } else {
-                    beePanel.active = false;
                 }
             }
 

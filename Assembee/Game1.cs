@@ -1,6 +1,5 @@
 ﻿using Assembee.Game;
 using Assembee.Game.Entities;
-using Assembee.Game.Entities.Tiles;
 using Assembee.Game.GameMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,8 +7,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Assembee {
+namespace Assembee
+{
     public class Game1 : Microsoft.Xna.Framework.Game {
 
         public static WindowHandler windowHandler;
@@ -22,20 +23,29 @@ namespace Assembee {
         public static SpriteFont font36;
 
         public enum Building {
-            None,
             Apartment,
             HoneyProducer,
             WaxProducer
         }
 
-        Building selectedBuilding = Building.None;
+        Building selectedBuilding = Building.Apartment;
+
+        public enum AppState {
+            TitleScreen,
+            InGame
+        }
 
         public enum GameState {
-            TitleScreen,
-            InGame,
+            Base,
+            BuildingTiles,
+            BuildingLines,
+            Paused
         }
-        public static GameState gameState = GameState.TitleScreen;
 
+        public static AppState appState = AppState.TitleScreen;
+        public static GameState gameState = GameState.Base;
+
+        public static HexPosition beeLineStart;
 
         public Game1() {
             Content.RootDirectory = "Content";
@@ -54,6 +64,7 @@ namespace Assembee {
 
         protected override void LoadContent() {
             ContentRegistry.LoadContent(Content);
+            GameRegistry.Load();
 
             // Sets the initial resolution
             //graphics = new GraphicsDeviceManager(this);
@@ -74,88 +85,12 @@ namespace Assembee {
                 windowHandler.ToggleFullscreen();
             }
 
-            // Press esc to end the game
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            switch (gameState) {
-                case GameState.TitleScreen:
+            switch (appState) {
+                case AppState.TitleScreen:
                     break;
 
-                case GameState.InGame:
-                    if (Input.keyPressed(Input.SaveGame)) {
-                        SaveManager.Save(world);
-                    }
-
-                    if (Input.keyPressed(Input.Enter)) {
-                        SaveManager.Save(world);
-                        gameState = GameState.TitleScreen;
-                        audio.StopMusic();
-                        audio.StopAllSounds();
-                        break;
-                    }
-
-                    if (Input.keyPressed(Input.Mute)) {
-                        audio.ToggleMute();
-                    }
-
-                    camera.Update();
-
-                    // Tile conditions
-                    if (Input.Click(0) && !HUD.OverActiveElement(Input.getMousePosition().ToPoint())) {
-                        Tile tileClicked = world.GetTile(Input.getMouseHexTile(camera));
-
-                        // Deselect a building when left click
-                        selectedBuilding = Building.None;
-
-                        world.SelectTile(tileClicked);
-                    }
-
-                    if (Input.Click(1) && world.GetTile(Input.getMouseHexTile(camera)) is null && !HUD.OverActiveElement(Input.getMousePosition().ToPoint())) {
-                        Tile newTile;
-                        switch (selectedBuilding) {
-                            case Building.Apartment:
-                                newTile = new Apartment(ContentRegistry.spr.t_apartments, Input.getMouseHexTile(camera));
-                                break;
-
-                            case Building.HoneyProducer:
-                                newTile = new HoneyFactory(ContentRegistry.spr.t_honey_producer, Input.getMouseHexTile(camera));
-                                break;
-
-                            case Building.WaxProducer:
-                                newTile = new WaxFactory(ContentRegistry.spr.t_wax_producer, Input.getMouseHexTile(camera));
-                                break;
-
-                            default:
-                                newTile = new Tile(ContentRegistry.spr.t_hex, Input.getMouseHexTile(camera));
-                                break;
-                        }
-                        int honey, wax;
-                        if (newTile.BuildingReqs(out honey, out wax)) {
-                            if (world.MainHive.honeyAmt >= honey && world.MainHive.waxAmt >= wax) {
-                                world.MainHive.honeyAmt -= honey;
-                                world.MainHive.waxAmt -= wax;
-                                world.AddTile(newTile);
-                                audio.PlaySound(Audio.sfx.place, 1f, 0f);
-                                if (selectedBuilding == Building.Apartment) {
-                                    world.AddBee(new Bee(ContentRegistry.spr.a_bee, newTile.position));
-                                }
-                            }
-                        }
-                    }
-
-                    for (int i = 0; i < Input.numKeys.Count; i++) {
-                        if (Input.keyPressed(Input.numKeys[i])) {
-                            if (selectedBuilding != (Building)(i + 1)) {
-                                selectedBuilding = (Building)(i + 1);
-                            } else {
-                                selectedBuilding = Building.None;
-                            }
-                        }
-                    }
-
-                    world?.Update(gameTime);
-
+                case AppState.InGame:
+                    GameUpdate(gameTime);
                     break;
             }
 
@@ -163,15 +98,122 @@ namespace Assembee {
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime) {
+        private void GameUpdate(GameTime gameTime) {
+            if (Input.keyPressed(Input.SaveGame)) {
+                SaveManager.Save(world);
+            }
 
+            if (Input.keyPressed(Input.Enter)) {
+                SaveManager.Save(world);
+                appState = AppState.TitleScreen;
+                audio.StopMusic();
+                audio.StopAllSounds();
+                return;
+            }
+
+            if (Input.keyPressed(Input.Mute)) {
+                audio.ToggleMute();
+            }
+
+            if (Input.keyPressed(Keys.Escape)) {
+                gameState = GameState.Base;
+            }
+
+            if (Input.keyPressed(Keys.B)) {
+                if (gameState == GameState.BuildingTiles) {
+                    gameState = GameState.Base;
+                } else {
+                    gameState = GameState.BuildingTiles;
+                }
+            }
+
+            if (Input.keyPressed(Keys.V)) {
+                if (gameState == GameState.BuildingLines) {
+                    gameState = GameState.Base;
+                } else {
+                    gameState = GameState.BuildingLines;
+                    beeLineStart = null;
+                }
+            }
+
+            /* TODO this should be moved to a separate class called UserInterface or something. */
             switch (gameState) {
-                case GameState.InGame:
+                case GameState.Base:
+                    if (Input.Click(0) && !HUD.OverActiveElement(Input.getMousePosition().ToPoint())) {
+                        Tile tileClicked = world.GetTile(Input.getMouseHexTile(camera));
+                        world.SelectTile(tileClicked);
+                    }
+
+                    break;
+
+                case GameState.BuildingTiles:
+                    if (Input.Click(1) && world.GetTile(Input.getMouseHexTile(camera)) is null && !HUD.OverActiveElement(Input.getMousePosition())) {
+                        Tile newTile = null;
+                        switch (selectedBuilding) {
+                            case Building.Apartment:
+                                newTile = new Apartment(ContentRegistry.spr.t_apartments, Input.getMouseHexTile(camera));
+                                break;
+
+                            case Building.HoneyProducer:
+                                newTile = new FactoryTile(GameRegistry.fct.honeyProduction, Input.getMouseHexTile(camera));
+                                break;
+
+                            case Building.WaxProducer:
+                                newTile = new FactoryTile(GameRegistry.fct.waxProduction, Input.getMouseHexTile(camera));
+                                break;
+                        }
+
+                        bool canBuild = !(newTile is null) && IBuildable.CanBuild((IBuildable)newTile, world.MainHive.Inventory);
+
+                        if (canBuild) {
+                            foreach (var kvp in ((IBuildable)newTile).BuildingRequirement) {
+                                world.MainHive.Inventory[kvp.Key] -= kvp.Value;
+                            }
+
+                            world.AddTile(newTile);
+                            audio.PlaySound(Audio.sfx.place, 1f, 0f);
+                        }
+                    }
+
+                    for (int i = 0; i < Input.numKeys.Count; i++) {
+                        if (Input.keyPressed(Input.numKeys[i])) {
+                             selectedBuilding = (Building)(i + 1);
+                        }
+                    }
+
+                    break;
+
+                case GameState.BuildingLines:
+                    if (Input.Click(1) && !HUD.OverActiveElement(Input.getMousePosition()) && world.GetTile(Input.getMouseHexTile(camera)) is IInventoryTile) {
+                        HexPosition inputPosition = Input.getMouseHexTile(camera);
+                        if (beeLineStart is null) {
+                            beeLineStart = inputPosition;
+                        } else {
+                            SimpleBeeLine beeLine = new SimpleBeeLine(beeLineStart, inputPosition, world, 10);
+
+                            /* Only add bee line if it actually transports something. */
+                            if (!beeLine.TransportMaterials.IsEmpty) {
+                                world.AddEntity(beeLine);
+                                beeLineStart = null;
+                            }
+                        }
+                    }
+
+                    break;
+            }
+
+            camera.Update();
+            world?.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime) {
+            switch (appState) {
+                case AppState.InGame:
                     windowHandler.RenderWorld();
                     windowHandler.RenderHUD(selectedBuilding);
                     break;
 
-                case GameState.TitleScreen:
+                case AppState.TitleScreen:
                     windowHandler.RenderMenu();
                     break;
 

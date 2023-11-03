@@ -1,13 +1,15 @@
 ﻿using Assembee.Game.Entities;
 using Assembee.Game.Entities.Tiles;
 using Assembee.Game.GameMath;
+using Assembee.Game.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Assembee.Game {
+namespace Assembee.Game
+{
     /// <summary>
     /// Holds all of the data pertaining to a world including actors, background tiles, bees.
     /// </summary>
@@ -15,45 +17,32 @@ namespace Assembee.Game {
 
         private const int WORLD_GRID_SIZE = 100;
 
-        public readonly List<Actor> Actors;
+        public readonly List<Entity> Entities;
         public readonly List<Tile> Background;
         public readonly List<Tile> Tiles; // This will make saving/loading easier, it won't be used other than for that.
 
-        public List<Bee> Bees { get; private set; } = new List<Bee>();
-
         public Tile SelectedTile { get; private set; }
         public Tile Selector;
-
         public Camera MainCamera { get; private set; }
         public Audio GameAudio { get; private set; }
         public Hive MainHive { get; private set; }
-
-        public Bee SelectedBee { get; private set; } = null;
 
         private readonly Tile[,] tileArray;
 
         public World(Camera camera) {
             MainCamera = camera;
-            Actors = new List<Actor>();
+
+            Entities = new List<Entity>();
             Background = new List<Tile>();
             Tiles = new List<Tile>();
-
             tileArray = new Tile[WORLD_GRID_SIZE * 2, WORLD_GRID_SIZE * 2];
-        }
-
-        /// <summary>
-        /// Adds a bee to the world.
-        /// </summary>
-        public void AddBee(Bee bee) {
-            Actors.Add(bee);
-            Bees.Add(bee);
         }
 
         /// <summary>
         /// Adds an actor to the world.
         /// </summary>
-        public void AddActor(Actor actor) {
-            Actors.Add(actor);
+        public void AddEntity(Entity entity) {
+            Entities.Add(entity);
         }
 
         /// <summary>
@@ -67,9 +56,6 @@ namespace Assembee.Game {
             
             tileArray[(int)tile.HexPosition.X + WORLD_GRID_SIZE, (int)tile.HexPosition.Y + WORLD_GRID_SIZE] = tile;
             Tiles.Add(tile);
-            if (tile.GetType() == typeof(Hive)) {
-                MainHive = (Hive)tile;
-            }
         }
 
         /// <summary>
@@ -131,9 +117,8 @@ namespace Assembee.Game {
         /// </summary>
         /// <param name="freshStart">Whether or not to load from a save file.</param>
         public void RestartGame() {
-            Actors.Clear();
+            Entities.Clear();
             Background.Clear();
-            Bees.Clear();
             
             foreach (Tile tile in Tiles) {
                 tileArray[(int)tile.HexPosition.X + WORLD_GRID_SIZE, (int)tile.HexPosition.Y + WORLD_GRID_SIZE] = null;
@@ -165,17 +150,11 @@ namespace Assembee.Game {
         /// </summary>
         private void GenerateWorld() {
             Hive hive = new Hive(ContentRegistry.spr.t_hive, new HexPosition(0, 0));
-            Bee bee = new Bee(ContentRegistry.spr.a_bee, new Vector2(0, 0));
-
-            AddBee(bee);
-            hive.BeeInside = bee;
             AddTile(hive);
+            MainHive = hive;
 
-            AddTile(new HoneyOutput(ContentRegistry.spr.t_helipad_honey, new HexPosition(0, 1)));
-            AddTile(new WaxOutput(ContentRegistry.spr.t_helipad_wax, new HexPosition(-1, 1)));
-
-            AddTile(new HoneyFactory(ContentRegistry.spr.t_honey_producer, new HexPosition(1, 0)));
-            AddTile(new WaxFactory(ContentRegistry.spr.t_wax_producer, new HexPosition(-1, 0)));
+            AddTile(new FactoryTile(GameRegistry.fct.honeyProduction, new HexPosition(1, 0)));
+            AddTile(new FactoryTile(GameRegistry.fct.waxProduction, new HexPosition(-1, 0)));
             AddTile(new Apartment(ContentRegistry.spr.t_apartments, new HexPosition(1, -1)));
 
             Random rand = new Random();
@@ -184,10 +163,15 @@ namespace Assembee.Game {
                     if (rand.NextDouble() < 0.05 && GetTile(new HexPosition(x, y)) is null) {
                         Random r = new Random();
                         int amt = r.Next(300, 650);
-                        AddTile(new Flowers(amt, ContentRegistry.spr.t_flowers, new HexPosition(x, y)));
+                        AddTile(new Flower(amt, ContentRegistry.spr.t_flowers, new HexPosition(x, y)));
                     }
                 }
             }
+
+/*            // Bee line just for testing:
+            AddTile(new Flower(100, new HexPosition(0, 5)));
+            AddEntity(new SimpleBeeLine(new HexPosition(0, 5), new HexPosition(1, 0), this, 5));
+            AddEntity(new SimpleBeeLine(new HexPosition(1, 0), new HexPosition(0, 0), this, 1));*/
         }
 
         /// <summary>
@@ -196,7 +180,7 @@ namespace Assembee.Game {
         public void NewGame() {
             RestartGame();
             GenerateWorld();
-            Game1.gameState = Game1.GameState.InGame;
+            Game1.appState = Game1.AppState.InGame;
         }
 
         /// <summary>
@@ -208,7 +192,7 @@ namespace Assembee.Game {
                 Util.Log("Failed to load world.");
                 return;
             }
-            Game1.gameState = Game1.GameState.InGame;
+            Game1.appState = Game1.AppState.InGame;
         }
 
         /// <summary>
@@ -216,28 +200,14 @@ namespace Assembee.Game {
         /// </summary>
         /// <param name="tile"></param>
         public void SelectTile(Tile tile) {
-
             if (tile == null) {
                 Selector = null;
-                SelectedBee = null;
                 SelectedTile = null;
                 return;
             }
 
             SelectedTile = tile;
             Selector = new Selector(ContentRegistry.spr.entity_selector, Input.getMouseHexTile(MainCamera));
-
-            if (tile.BeeInside != null) {
-                SelectedBee = tile.BeeInside;
-
-            } else if (SelectedBee != null) {
-                SelectedBee.SetTarget(tile.position, this);
-                Game1.audio.PlaySound(Audio.sfx.bee, 1f, 0f);
-                SelectedBee = null;
-
-            } else {
-                SelectedBee = null;
-            }
 
             Game1.audio.StopSound(Audio.sfx.click);
             Game1.audio.PlaySound(Audio.sfx.click, 0.6f, -0.41f);
@@ -260,8 +230,8 @@ namespace Assembee.Game {
 
             /* Draw every tile */
             Tile selectedTile;
-            for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
-                for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
+            for (int y = -WORLD_GRID_SIZE; y < WORLD_GRID_SIZE; y++) {
+                for (int x = -WORLD_GRID_SIZE; x < WORLD_GRID_SIZE; x++) {
                     selectedTile = GetTile(x, y);
                     if (selectedTile != null && MainCamera.InBounds(selectedTile.position)) {
                         GetTile(x, y).Draw(spriteBatch, animationTick);
@@ -270,9 +240,9 @@ namespace Assembee.Game {
             }
 
             /* Draw all actors */
-            foreach (Actor actor in Actors) {
-                if (MainCamera.InBounds(actor.position))
-                    actor.Draw(spriteBatch, animationTick);
+            foreach (Entity entity in Entities) {
+                //if (MainCamera.InBounds(entity.position)) // Doesn't work with bee lines.
+                    entity.Draw(spriteBatch, animationTick);
             }
 
         }
@@ -283,8 +253,8 @@ namespace Assembee.Game {
         /// <param name="gameTime"></param>
         public void Update(GameTime gameTime) {
             /* Update actors */
-            foreach (Actor actor in Actors) {
-                actor.Update(gameTime, this);
+            foreach (Entity entity in Entities) {
+                entity.Update(gameTime, this);
             }
 
             /* Update tiles */

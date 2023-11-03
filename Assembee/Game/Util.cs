@@ -13,6 +13,10 @@ namespace Assembee.Game {
             System.Diagnostics.Debug.WriteLine(message);
         }
 
+        public static void Log(object value) {
+            System.Diagnostics.Debug.WriteLine(value);
+        }
+
 
     }
 }

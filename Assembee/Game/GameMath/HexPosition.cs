@@ -10,8 +10,9 @@ namespace Assembee.Game.GameMath
 {
     public class HexPosition {
 
-        private const float SQRT3 = 1.73205080757f;
-        private const float FAC = 2.0f / 127.0f / 3.0f;
+        public static readonly float HexSize = 127.0f;
+        private static readonly float SQRT3 = 1.73205080757f;
+        private static readonly float FAC = 2.0f / HexSize / 3.0f;
         private static readonly Matrix2 hexMatrix = new Matrix2(MathF.Sqrt(3), MathF.Sqrt(3) / 2.0f, 0.0f, 3.0f / 2.0f);
 
         [JsonProperty] public int X { get; private set; }

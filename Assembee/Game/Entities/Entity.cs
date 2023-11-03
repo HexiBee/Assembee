@@ -10,20 +10,20 @@ namespace Assembee.Game.Entities {
 
         public Vector2 position;
 
-        protected bool pauseAnim = false;
+        protected bool PauseAnimation = false;
 
-        public Sprite sprite { get; set; }
+        public Sprite Sprite { get; private set; }
 
         public ContentRegistry.spr texture { get; set; }
 
         public Entity(ContentRegistry.spr texture, Vector2 position) {
             this.position = position;
             this.texture = texture;
-            sprite = new Sprite(this.texture);
+            Sprite = new Sprite(this.texture);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch, int animTick) {
-            sprite.Draw(spriteBatch, position, pauseAnim ? 0 : AnimationFrameFromTick(animTick));
+            Sprite.Draw(spriteBatch, position, PauseAnimation ? 0 : AnimationFrameFromTick(animTick));
         }
 
         public virtual void Update(GameTime gameTime, World world) {
@@ -31,14 +31,6 @@ namespace Assembee.Game.Entities {
 
         protected virtual int AnimationFrameFromTick(int animTick) {
             return animTick / 5;
-        }
-        public bool ShouldSerializesprite() {
-            if (sprite.color == Color.White && 
-                sprite.rotation == 0.0f &&
-                sprite.scale == 1.0f) {
-                return false;
-            }
-            return true;
         }
 
     }

@@ -16,11 +16,9 @@ namespace Assembee.Game {
 
     public class SaveData {
         public List<Tile> tiles { get; set; }
-        public List<Bee> bees { get; set; }
 
-        public SaveData(List<Bee> bees, List<Tile> tiles) {
+        public SaveData(List<Tile> tiles) {
             this.tiles = tiles;
-            this.bees = bees;
         }
         public SaveData() {
 
@@ -53,7 +51,7 @@ namespace Assembee.Game {
         }
 
         public static SaveData GetSaveData(World world) {
-            return new SaveData(world.Bees, world.Tiles);
+            return new SaveData(world.Tiles);
         }
 
         public static bool Load(World world) {
@@ -72,18 +70,8 @@ namespace Assembee.Game {
 
         private static void LoadData(SaveData saveData, World world) {
             foreach (Tile t in saveData.tiles) {
-                t.BeeInside = null;
                 world.AddTile(t);
             }
-           
-            foreach (Bee b in saveData.bees) {
-                if (!b.Flying) {
-                    Tile t = world.GetTile(HexPosition.PositionToHexPosition(b.position));
-                    if (t != null) t.BeeInside = b;
-                }
-                world.AddBee(b);
-            }
-
         }
 
 
